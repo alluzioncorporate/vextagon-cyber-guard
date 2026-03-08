@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Search, Globe, Lock, Server, Bug, Cpu, Radar, AlertCircle } from "lucide-react";
+import { Search, Globe, Lock, Server, Bug, Cpu, Radar, AlertCircle, ShieldAlert, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { generateScanResults, validateDomain, type ScanResult } from "@/lib/scanEngine";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const severityClass: Record<string, string> = {
   critical: "severity-critical",
