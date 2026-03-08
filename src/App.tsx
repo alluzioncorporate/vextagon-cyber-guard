@@ -5,8 +5,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppLayout from "@/components/AppLayout";
 import WafDashboard from "@/pages/WafDashboard";
-import DeepScan from "@/pages/DeepScan";
+import EasmScanner from "@/pages/EasmScanner";
 import DataLeaks from "@/pages/DataLeaks";
+import AlertsCenter from "@/pages/AlertsCenter";
+import WhatsAppConfig from "@/pages/WhatsAppConfig";
 import SecurityAuditor from "@/pages/SecurityAuditor";
 import Pricing from "@/pages/Pricing";
 import AdminPanel from "@/pages/AdminPanel";
@@ -23,8 +25,10 @@ const App = () => (
         <AppLayout>
           <Routes>
             <Route path="/" element={<WafDashboard />} />
-            <Route path="/deep-scan" element={<DeepScan />} />
+            <Route path="/easm" element={<EasmScanner />} />
             <Route path="/data-leaks" element={<DataLeaks />} />
+            <Route path="/alerts" element={<AlertsCenter />} />
+            <Route path="/whatsapp" element={<WhatsAppConfig />} />
             <Route path="/auditor" element={<SecurityAuditor />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/admin" element={<AdminPanel />} />
