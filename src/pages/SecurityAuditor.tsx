@@ -1,11 +1,16 @@
-import { motion } from "framer-motion";
 import { FileText, Download, Shield, AlertTriangle, Globe, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { mockScanResults } from "@/data/mockData";
 
+const severityClass: Record<string, string> = {
+  critical: "severity-critical",
+  high: "severity-high",
+  medium: "severity-medium",
+  low: "severity-low",
+};
+
 export default function SecurityAuditor() {
-  const handleGeneratePdf = () => {
-    // In production, this would generate a real PDF
+  const handleGenerateReport = () => {
     const content = `
 === VEXTAGON SECURITY AUDIT REPORT ===
 Domain: ${mockScanResults.domain}
@@ -21,8 +26,17 @@ Issuer: ${mockScanResults.ssl.issuer}
 Protocol: ${mockScanResults.ssl.protocol}
 Grade: ${mockScanResults.ssl.grade}
 
+--- Security Headers ---
+${Object.entries(mockScanResults.securityHeaders).map(([h, d]) => `${h}: ${d.present ? "PRESENT" : "MISSING"}`).join("\n")}
+
 --- Open Ports ---
-${mockScanResults.ports.map((p) => `Port ${p.port} (${p.service}) - Risk: ${p.risk}`).join("\n")}
+${mockScanResults.ports.map((p) => `Port ${p.port} (${p.service}) - ${p.status} - Risk: ${p.risk}`).join("\n")}
+
+--- Shodan Intelligence ---
+IP: ${mockScanResults.shodan.ip}
+OS: ${mockScanResults.shodan.os}
+Organization: ${mockScanResults.shodan.organization}
+Services: ${mockScanResults.shodan.services.map(s => `${s.product} ${s.version} (:${s.port})`).join(", ")}
 
 --- Vulnerabilities ---
 ${mockScanResults.vulnerabilities.map((v) => `[${v.severity.toUpperCase()}] ${v.id}: ${v.title}\n  ${v.description}`).join("\n\n")}
@@ -41,101 +55,86 @@ Powered by Vextagon | Alluzion Corporate
   };
 
   const criticalCount = mockScanResults.vulnerabilities.filter((v) => v.severity === "critical").length;
-  const highCount = mockScanResults.vulnerabilities.filter((v) => v.severity === "high").length;
 
   return (
     <div className="space-y-6">
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-start justify-between">
+      <div className="flex items-start justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold tracking-wide neon-text">Security Auditor</h1>
-          <p className="text-sm text-muted-foreground mt-1">Gerador automático de relatórios de auditoria</p>
+          <h1 className="text-lg font-semibold tracking-wide text-foreground">Security Auditor</h1>
+          <p className="text-xs text-muted-foreground mt-0.5">Gerador de relatórios de auditoria</p>
         </div>
-        <Button onClick={handleGeneratePdf} className="font-display text-xs tracking-wider">
-          <Download className="mr-2 h-4 w-4" />
+        <Button onClick={handleGenerateReport} size="sm" className="text-xs font-medium">
+          <Download className="mr-1.5 h-3.5 w-3.5" />
           Gerar Relatório
         </Button>
-      </motion.div>
+      </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
+      {/* Summary */}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {[
-          { label: "Domínio", value: mockScanResults.domain, icon: Globe, color: "text-foreground" },
-          { label: "Score", value: `${mockScanResults.score}/100`, icon: Shield, color: "neon-text" },
-          { label: "Críticas", value: criticalCount.toString(), icon: AlertTriangle, color: "text-destructive" },
-          { label: "SSL Grade", value: mockScanResults.ssl.grade, icon: Lock, color: "status-safe" },
-        ].map((s, i) => (
-          <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="glass-card-hover p-5">
+          { label: "Domínio", value: mockScanResults.domain, icon: Globe },
+          { label: "Score", value: `${mockScanResults.score}/100`, icon: Shield, cyan: true },
+          { label: "Críticas", value: criticalCount.toString(), icon: AlertTriangle, danger: true },
+          { label: "SSL", value: mockScanResults.ssl.grade, icon: Lock, success: true },
+        ].map((s) => (
+          <div key={s.label} className="v-card p-4">
             <div className="flex items-center justify-between">
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">{s.label}</p>
-              <s.icon className={`h-4 w-4 ${s.color}`} />
+              <span className="v-label">{s.label}</span>
+              <s.icon className={`h-3.5 w-3.5 ${s.danger ? "text-destructive" : s.cyan ? "text-cyan" : s.success ? "text-success" : "text-muted-foreground"}`} />
             </div>
-            <p className={`mt-2 font-mono text-2xl font-bold ${s.color}`}>{s.value}</p>
-          </motion.div>
+            <p className={`mt-2 v-stat ${s.danger ? "text-destructive" : s.cyan ? "text-cyan" : s.success ? "text-success" : "text-foreground"}`}>{s.value}</p>
+          </div>
         ))}
       </div>
 
-      {/* Full Report Preview */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="glass-card p-6">
+      {/* Report Preview */}
+      <div className="v-card p-4">
         <div className="flex items-center gap-2 mb-4">
-          <FileText className="h-5 w-5 text-primary" />
-          <h2 className="font-display text-sm font-semibold tracking-wide">Preview do Relatório</h2>
+          <FileText className="h-3.5 w-3.5 text-primary" />
+          <p className="v-section-title">Preview do Relatório</p>
         </div>
 
-        <div className="space-y-6 rounded-lg bg-secondary/20 p-6">
-          {/* Header */}
-          <div className="border-b border-border pb-4 text-center">
-            <h3 className="font-display text-lg font-bold neon-text">VEXTAGON SECURITY AUDIT</h3>
-            <p className="font-mono text-xs text-muted-foreground mt-1">
+        <div className="space-y-4 rounded bg-secondary/30 p-5">
+          <div className="border-b border-border pb-3 text-center">
+            <h3 className="text-sm font-semibold text-foreground">VEXTAGON SECURITY AUDIT</h3>
+            <p className="font-mono text-[10px] text-muted-foreground mt-0.5">
               {mockScanResults.domain} | {new Date(mockScanResults.scanDate).toLocaleDateString("pt-BR")}
             </p>
           </div>
 
-          {/* Sections */}
-          <div className="space-y-4">
-            <div>
-              <h4 className="font-display text-xs font-semibold uppercase tracking-wider text-primary mb-2">Vulnerabilidades Encontradas</h4>
-              {mockScanResults.vulnerabilities.map((v) => (
-                <div key={v.id} className="mb-2 rounded bg-secondary/30 p-3">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-bold">{v.id}</span>
-                    <span className={`font-mono text-[10px] font-bold uppercase ${
-                      v.severity === "critical" ? "text-destructive" :
-                      v.severity === "high" ? "status-danger" :
-                      v.severity === "medium" ? "status-warning" : "text-muted-foreground"
-                    }`}>{v.severity}</span>
-                  </div>
-                  <p className="text-xs text-foreground mt-1">{v.title}</p>
-                  <p className="text-xs text-muted-foreground">{v.description}</p>
-                  <p className="text-[10px] text-muted-foreground mt-1">Afetado: {v.affected}</p>
+          <div>
+            <p className="v-label mb-2">Vulnerabilidades</p>
+            {mockScanResults.vulnerabilities.map((v) => (
+              <div key={v.id} className="mb-1.5 rounded bg-secondary/40 p-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-[10px] font-medium text-foreground">{v.id}</span>
+                  <span className={`font-mono text-[9px] font-medium uppercase ${severityClass[v.severity]}`}>{v.severity}</span>
+                </div>
+                <p className="text-[11px] text-foreground mt-0.5">{v.title}</p>
+                <p className="text-[10px] text-muted-foreground">{v.description}</p>
+              </div>
+            ))}
+          </div>
+
+          <div>
+            <p className="v-label mb-2">Portas Abertas</p>
+            <div className="grid grid-cols-2 gap-1.5">
+              {mockScanResults.ports.map((p) => (
+                <div key={p.port} className="flex justify-between rounded bg-secondary/40 px-2.5 py-1.5">
+                  <span className="font-mono text-[10px]">:{p.port} ({p.service})</span>
+                  <span className={`font-mono text-[10px] font-medium uppercase ${severityClass[p.risk]}`}>{p.risk}</span>
                 </div>
               ))}
             </div>
-
-            <div>
-              <h4 className="font-display text-xs font-semibold uppercase tracking-wider text-primary mb-2">Portas Abertas</h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {mockScanResults.ports.map((p) => (
-                  <div key={p.port} className="flex justify-between rounded bg-secondary/30 px-3 py-2">
-                    <span className="font-mono text-xs">:{p.port} ({p.service})</span>
-                    <span className={`font-mono text-xs font-bold uppercase ${
-                      p.risk === "critical" ? "text-destructive" :
-                      p.risk === "high" ? "status-danger" :
-                      p.risk === "medium" ? "status-warning" : "text-muted-foreground"
-                    }`}>{p.risk}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
 
-          {/* Footer */}
-          <div className="border-t border-border pt-4 text-center">
-            <p className="font-mono text-[10px] text-muted-foreground">
-              Relatório gerado por <span className="gold-text font-semibold">Vextagon</span> | Alluzion Corporate
+          <div className="border-t border-border pt-3 text-center">
+            <p className="font-mono text-[9px] text-muted-foreground">
+              Vextagon | Alluzion Corporate
             </p>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

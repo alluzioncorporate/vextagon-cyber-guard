@@ -14,7 +14,230 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      leaked_data: {
+        Row: {
+          breach_date: string | null
+          checked_at: string
+          data_types: string[] | null
+          email: string
+          id: string
+          password_hash: string | null
+          source: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          breach_date?: string | null
+          checked_at?: string
+          data_types?: string[] | null
+          email: string
+          id?: string
+          password_hash?: string | null
+          source?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          breach_date?: string | null
+          checked_at?: string
+          data_types?: string[] | null
+          email?: string
+          id?: string
+          password_hash?: string | null
+          source?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          subscription_tier: string
+          updated_at: string
+          whatsapp_enabled: boolean
+          whatsapp_number: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          subscription_tier?: string
+          updated_at?: string
+          whatsapp_enabled?: boolean
+          whatsapp_number?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          subscription_tier?: string
+          updated_at?: string
+          whatsapp_enabled?: boolean
+          whatsapp_number?: string | null
+        }
+        Relationships: []
+      }
+      security_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          description: string | null
+          domain: string | null
+          id: string
+          notified_whatsapp: boolean
+          read: boolean
+          severity: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          description?: string | null
+          domain?: string | null
+          id?: string
+          notified_whatsapp?: boolean
+          read?: boolean
+          severity?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          description?: string | null
+          domain?: string | null
+          id?: string
+          notified_whatsapp?: boolean
+          read?: boolean
+          severity?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      security_scans: {
+        Row: {
+          created_at: string
+          dns_data: Json | null
+          domain: string
+          domain_id: string
+          headers_data: Json | null
+          id: string
+          ports_data: Json | null
+          scan_type: string
+          score: number | null
+          shodan_data: Json | null
+          ssl_data: Json | null
+          user_id: string
+          vulnerabilities: Json | null
+        }
+        Insert: {
+          created_at?: string
+          dns_data?: Json | null
+          domain: string
+          domain_id: string
+          headers_data?: Json | null
+          id?: string
+          ports_data?: Json | null
+          scan_type?: string
+          score?: number | null
+          shodan_data?: Json | null
+          ssl_data?: Json | null
+          user_id: string
+          vulnerabilities?: Json | null
+        }
+        Update: {
+          created_at?: string
+          dns_data?: Json | null
+          domain?: string
+          domain_id?: string
+          headers_data?: Json | null
+          id?: string
+          ports_data?: Json | null
+          scan_type?: string
+          score?: number | null
+          shodan_data?: Json | null
+          ssl_data?: Json | null
+          user_id?: string
+          vulnerabilities?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_scans_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "user_domains"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_domains: {
+        Row: {
+          added_at: string
+          domain: string
+          id: string
+          last_scanned_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          added_at?: string
+          domain: string
+          id?: string
+          last_scanned_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          added_at?: string
+          domain?: string
+          id?: string
+          last_scanned_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      whatsapp_config: {
+        Row: {
+          connection_status: string
+          created_at: string
+          enabled: boolean
+          id: string
+          last_notification_at: string | null
+          phone_number: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          connection_status?: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          last_notification_at?: string | null
+          phone_number: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          connection_status?: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          last_notification_at?: string | null
+          phone_number?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

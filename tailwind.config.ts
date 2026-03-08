@@ -14,7 +14,6 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['Orbitron', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
         sans: ['Inter', 'sans-serif'],
       },
@@ -62,10 +61,6 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        neon: {
-          cyan: "hsl(var(--neon-cyan))",
-        },
-        gold: "hsl(var(--gold))",
       },
       borderRadius: {
         lg: "var(--radius)",
