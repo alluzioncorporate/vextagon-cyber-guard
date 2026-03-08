@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Search, Globe, Lock, Server, Bug, Cpu, Radar } from "lucide-react";
+import { Search, Globe, Lock, Server, Bug, Cpu, Radar, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { mockScanResults } from "@/data/mockData";
+import { generateScanResults, validateDomain, type ScanResult } from "@/lib/scanEngine";
 
 const severityClass: Record<string, string> = {
   critical: "severity-critical",
@@ -14,15 +14,23 @@ const severityClass: Record<string, string> = {
 export default function EasmScanner() {
   const [domain, setDomain] = useState("");
   const [scanning, setScanning] = useState(false);
-  const [results, setResults] = useState<typeof mockScanResults | null>(null);
+  const [results, setResults] = useState<ScanResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleScan = () => {
-    if (!domain.trim()) return;
+    const validation = validateDomain(domain);
+    if (!validation.valid) {
+      setError(validation.reason || "Domínio inválido");
+      return;
+    }
+    setError(null);
     setScanning(true);
     setResults(null);
+
+    // Simulate network delay
     setTimeout(() => {
       setScanning(false);
-      setResults({ ...mockScanResults, domain: domain.trim() });
+      setResults(generateScanResults(domain.trim().toLowerCase()));
     }, 2500);
   };
 
@@ -42,7 +50,7 @@ export default function EasmScanner() {
             <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={domain}
-              onChange={(e) => setDomain(e.target.value)}
+              onChange={(e) => { setDomain(e.target.value); setError(null); }}
               placeholder="dominio.com"
               className="bg-secondary/50 pl-9 font-mono text-xs border-border"
               onKeyDown={(e) => e.key === "Enter" && handleScan()}
@@ -53,6 +61,12 @@ export default function EasmScanner() {
             {scanning ? "Analisando..." : "Scan"}
           </Button>
         </div>
+        {error && (
+          <div className="mt-2 flex items-center gap-1.5 text-destructive text-xs">
+            <AlertCircle className="h-3.5 w-3.5" />
+            {error}
+          </div>
+        )}
       </div>
 
       {/* Scanning */}
@@ -84,7 +98,7 @@ export default function EasmScanner() {
                 {results.dns.records.map((r, i) => (
                   <div key={i} className="flex items-center justify-between rounded bg-secondary/40 px-3 py-2">
                     <span className="font-mono text-[11px] font-medium text-cyan">{r.type}</span>
-                    <span className="font-mono text-[11px] text-muted-foreground">{r.value}</span>
+                    <span className="font-mono text-[11px] text-muted-foreground truncate ml-2 max-w-[200px]">{r.value}</span>
                   </div>
                 ))}
               </div>
@@ -119,7 +133,7 @@ export default function EasmScanner() {
                   { label: "Status", value: results.ssl.valid ? "Válido" : "Inválido", cls: results.ssl.valid ? "text-success" : "severity-critical" },
                   { label: "Emissor", value: results.ssl.issuer },
                   { label: "Protocolo", value: results.ssl.protocol },
-                  { label: "Grade", value: results.ssl.grade, cls: "text-cyan font-medium" },
+                  { label: "Grade", value: results.ssl.grade, cls: results.ssl.grade.startsWith("A") ? "text-cyan font-medium" : results.ssl.grade === "F" ? "severity-critical" : "text-warning" },
                   { label: "Expira", value: results.ssl.expiresAt },
                 ].map((item) => (
                   <div key={item.label} className="flex justify-between rounded bg-secondary/40 px-3 py-2">
@@ -187,7 +201,7 @@ export default function EasmScanner() {
             <div className="v-card p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Bug className="h-3.5 w-3.5 text-destructive" />
-                <p className="v-section-title">Vulnerabilidades</p>
+                <p className="v-section-title">Vulnerabilidades ({results.vulnerabilities.length})</p>
               </div>
               <div className="space-y-2">
                 {results.vulnerabilities.map((v) => (
