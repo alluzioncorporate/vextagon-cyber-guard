@@ -1,4 +1,5 @@
-import { Users, Globe, DollarSign, Crown } from "lucide-react";
+import { Users, Globe, DollarSign, Crown, Activity } from "lucide-react";
+import { Link } from "react-router-dom";
 import { mockAdminUsers } from "@/data/mockData";
 
 export default function AdminPanel() {
