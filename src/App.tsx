@@ -12,6 +12,7 @@ import WhatsAppConfig from "@/pages/WhatsAppConfig";
 import SecurityAuditor from "@/pages/SecurityAuditor";
 import Pricing from "@/pages/Pricing";
 import AdminPanel from "@/pages/AdminPanel";
+import AdminDiagnostics from "@/pages/AdminDiagnostics";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/auditor" element={<SecurityAuditor />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/admin/diagnostics" element={<AdminDiagnostics />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AppLayout>
