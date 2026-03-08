@@ -266,6 +266,43 @@ export default function EasmScanner() {
               </div>
             </div>
           </div>
+
+          {/* Recommendations */}
+          <div className="v-card p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <ShieldAlert className="h-4 w-4 text-primary" />
+              <h2 className="v-section-title">Recomendações de Segurança</h2>
+            </div>
+            <Alert className="mb-3 bg-warning/10 border-warning/20">
+              <AlertCircle className="h-3.5 w-3.5 text-warning" />
+              <AlertDescription className="text-[11px] text-muted-foreground ml-1">
+                <strong className="text-warning">Nota:</strong> Esta ferramenta usa simulação determinística para demonstração. 
+                Para análise real, conecte APIs de DNS, SSL e Shodan via edge functions.
+              </AlertDescription>
+            </Alert>
+            <div className="space-y-2">
+              {generateRecommendations(results).map((rec, idx) => (
+                <div key={idx} className={`rounded border-l-4 bg-secondary/40 p-3 ${
+                  rec.severity === "critical" ? "border-l-[#FF4444]" :
+                  rec.severity === "high" ? "border-l-[#FF8C00]" :
+                  rec.severity === "medium" ? "border-l-[#FFA500]" :
+                  "border-l-[#00D9FF]"
+                }`}>
+                  <div className="flex items-start gap-2">
+                    {rec.severity === "low" ? (
+                      <CheckCircle2 className="h-3.5 w-3.5 text-success mt-0.5 shrink-0" />
+                    ) : (
+                      <AlertCircle className={`h-3.5 w-3.5 mt-0.5 shrink-0 ${severityClass[rec.severity]}`} />
+                    )}
+                    <div className="flex-1">
+                      <p className={`font-mono text-[11px] font-medium ${severityClass[rec.severity]}`}>{rec.title}</p>
+                      <p className="text-[10px] text-muted-foreground mt-1">{rec.action}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>
