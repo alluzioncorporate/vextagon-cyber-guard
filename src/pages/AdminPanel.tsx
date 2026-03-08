@@ -9,9 +9,18 @@ export default function AdminPanel() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-lg font-semibold tracking-wide text-foreground">Admin Panel</h1>
-        <p className="text-xs text-muted-foreground mt-0.5">Usuários, domínios e faturamento</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-lg font-semibold tracking-wide text-foreground">Admin Panel</h1>
+          <p className="text-xs text-muted-foreground mt-0.5">Usuários, domínios e faturamento</p>
+        </div>
+        <Link
+          to="/admin/diagnostics"
+          className="flex items-center gap-1.5 rounded border border-border px-3 py-1.5 text-[11px] text-muted-foreground transition-colors hover:text-cyan hover:border-primary/30"
+        >
+          <Activity className="h-3 w-3" />
+          Diagnóstico
+        </Link>
       </div>
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
