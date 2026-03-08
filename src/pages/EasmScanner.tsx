@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Search, Globe, Lock, Server, Bug, Cpu, Radar, AlertCircle } from "lucide-react";
+import { Search, Globe, Lock, Server, Bug, Cpu, Radar, AlertCircle, ShieldAlert, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { generateScanResults, validateDomain, type ScanResult } from "@/lib/scanEngine";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const severityClass: Record<string, string> = {
   critical: "severity-critical",
@@ -35,6 +36,54 @@ export default function EasmScanner() {
   };
 
   const scoreColor = (s: number) => s >= 80 ? "text-success" : s >= 60 ? "text-warning" : "severity-critical";
+
+  const generateRecommendations = (data: ScanResult) => {
+    const recs: { severity: "critical" | "high" | "medium" | "low"; title: string; action: string }[] = [];
+
+    // SSL Issues
+    if (!data.ssl.valid) {
+      recs.push({ severity: "critical", title: "Certificado SSL Inválido", action: "Renove o certificado SSL imediatamente. Use Let's Encrypt ou DigiCert para obter um certificado válido." });
+    }
+    if (data.ssl.grade === "F" || data.ssl.grade === "D") {
+      recs.push({ severity: "high", title: "Configuração SSL Fraca", action: "Atualize para TLS 1.3 e desabilite cipher suites fracos (3DES, RC4). Configure HSTS com preload." });
+    }
+
+    // Security Headers
+    const missingHeaders = Object.entries(data.securityHeaders).filter(([_, h]) => !h.present);
+    if (missingHeaders.length >= 4) {
+      recs.push({ severity: "high", title: `${missingHeaders.length} Headers de Segurança Ausentes`, action: "Implemente HSTS, X-Frame-Options, CSP e X-Content-Type-Options no servidor web." });
+    } else if (missingHeaders.length > 0) {
+      recs.push({ severity: "medium", title: `${missingHeaders.length} Headers Faltando`, action: `Configure: ${missingHeaders.slice(0, 2).map(([k]) => k).join(", ")}` });
+    }
+
+    // Critical Ports
+    const criticalOpen = data.ports.filter(p => p.status === "open" && (p.risk === "critical" || p.risk === "high"));
+    if (criticalOpen.length > 0) {
+      recs.push({ severity: "critical", title: `${criticalOpen.length} Portas de Alto Risco Abertas`, action: `Feche ou restrinja: ${criticalOpen.map(p => p.port).join(", ")}. Use firewall para bloquear acesso não autorizado.` });
+    }
+
+    // Vulnerabilities
+    const criticalVulns = data.vulnerabilities.filter(v => v.severity === "critical");
+    if (criticalVulns.length > 0) {
+      recs.push({ severity: "critical", title: `${criticalVulns.length} Vulnerabilidades Críticas`, action: `Aplique patches imediatamente: ${criticalVulns.slice(0, 2).map(v => v.id).join(", ")}` });
+    }
+
+    // DNS Security
+    const hasSPF = data.dns.records.some(r => r.type === "TXT" && r.value.includes("spf1"));
+    if (!hasSPF) {
+      recs.push({ severity: "medium", title: "SPF Não Configurado", action: "Configure SPF record para prevenir spoofing de e-mail: v=spf1 include:_spf.google.com ~all" });
+    }
+
+    // Good practices if score is high
+    if (data.score >= 85) {
+      recs.push({ severity: "low", title: "Configuração Sólida Detectada", action: "Continue monitorando regularmente. Configure alertas automáticos para mudanças." });
+    }
+
+    return recs.sort((a, b) => {
+      const order = { critical: 0, high: 1, medium: 2, low: 3 };
+      return order[a.severity] - order[b.severity];
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -215,6 +264,43 @@ export default function EasmScanner() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+
+          {/* Recommendations */}
+          <div className="v-card p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <ShieldAlert className="h-4 w-4 text-primary" />
+              <h2 className="v-section-title">Recomendações de Segurança</h2>
+            </div>
+            <Alert className="mb-3 bg-warning/10 border-warning/20">
+              <AlertCircle className="h-3.5 w-3.5 text-warning" />
+              <AlertDescription className="text-[11px] text-muted-foreground ml-1">
+                <strong className="text-warning">Nota:</strong> Esta ferramenta usa simulação determinística para demonstração. 
+                Para análise real, conecte APIs de DNS, SSL e Shodan via edge functions.
+              </AlertDescription>
+            </Alert>
+            <div className="space-y-2">
+              {generateRecommendations(results).map((rec, idx) => (
+                <div key={idx} className={`rounded border-l-4 bg-secondary/40 p-3 ${
+                  rec.severity === "critical" ? "border-l-[#FF4444]" :
+                  rec.severity === "high" ? "border-l-[#FF8C00]" :
+                  rec.severity === "medium" ? "border-l-[#FFA500]" :
+                  "border-l-[#00D9FF]"
+                }`}>
+                  <div className="flex items-start gap-2">
+                    {rec.severity === "low" ? (
+                      <CheckCircle2 className="h-3.5 w-3.5 text-success mt-0.5 shrink-0" />
+                    ) : (
+                      <AlertCircle className={`h-3.5 w-3.5 mt-0.5 shrink-0 ${severityClass[rec.severity]}`} />
+                    )}
+                    <div className="flex-1">
+                      <p className={`font-mono text-[11px] font-medium ${severityClass[rec.severity]}`}>{rec.title}</p>
+                      <p className="text-[10px] text-muted-foreground mt-1">{rec.action}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
