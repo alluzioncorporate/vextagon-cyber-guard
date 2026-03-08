@@ -37,6 +37,54 @@ export default function EasmScanner() {
 
   const scoreColor = (s: number) => s >= 80 ? "text-success" : s >= 60 ? "text-warning" : "severity-critical";
 
+  const generateRecommendations = (data: ScanResult) => {
+    const recs: { severity: "critical" | "high" | "medium" | "low"; title: string; action: string }[] = [];
+
+    // SSL Issues
+    if (!data.ssl.valid) {
+      recs.push({ severity: "critical", title: "Certificado SSL Inválido", action: "Renove o certificado SSL imediatamente. Use Let's Encrypt ou DigiCert para obter um certificado válido." });
+    }
+    if (data.ssl.grade === "F" || data.ssl.grade === "D") {
+      recs.push({ severity: "high", title: "Configuração SSL Fraca", action: "Atualize para TLS 1.3 e desabilite cipher suites fracos (3DES, RC4). Configure HSTS com preload." });
+    }
+
+    // Security Headers
+    const missingHeaders = Object.entries(data.securityHeaders).filter(([_, h]) => !h.present);
+    if (missingHeaders.length >= 4) {
+      recs.push({ severity: "high", title: `${missingHeaders.length} Headers de Segurança Ausentes`, action: "Implemente HSTS, X-Frame-Options, CSP e X-Content-Type-Options no servidor web." });
+    } else if (missingHeaders.length > 0) {
+      recs.push({ severity: "medium", title: `${missingHeaders.length} Headers Faltando`, action: `Configure: ${missingHeaders.slice(0, 2).map(([k]) => k).join(", ")}` });
+    }
+
+    // Critical Ports
+    const criticalOpen = data.ports.filter(p => p.status === "open" && (p.risk === "critical" || p.risk === "high"));
+    if (criticalOpen.length > 0) {
+      recs.push({ severity: "critical", title: `${criticalOpen.length} Portas de Alto Risco Abertas`, action: `Feche ou restrinja: ${criticalOpen.map(p => p.port).join(", ")}. Use firewall para bloquear acesso não autorizado.` });
+    }
+
+    // Vulnerabilities
+    const criticalVulns = data.vulnerabilities.filter(v => v.severity === "critical");
+    if (criticalVulns.length > 0) {
+      recs.push({ severity: "critical", title: `${criticalVulns.length} Vulnerabilidades Críticas`, action: `Aplique patches imediatamente: ${criticalVulns.slice(0, 2).map(v => v.id).join(", ")}` });
+    }
+
+    // DNS Security
+    const hasSPF = data.dns.records.some(r => r.type === "TXT" && r.value.includes("spf1"));
+    if (!hasSPF) {
+      recs.push({ severity: "medium", title: "SPF Não Configurado", action: "Configure SPF record para prevenir spoofing de e-mail: v=spf1 include:_spf.google.com ~all" });
+    }
+
+    // Good practices if score is high
+    if (data.score >= 85) {
+      recs.push({ severity: "low", title: "Configuração Sólida Detectada", action: "Continue monitorando regularmente. Configure alertas automáticos para mudanças." });
+    }
+
+    return recs.sort((a, b) => {
+      const order = { critical: 0, high: 1, medium: 2, low: 3 };
+      return order[a.severity] - order[b.severity];
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div>
