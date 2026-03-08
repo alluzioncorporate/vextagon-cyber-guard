@@ -12,6 +12,7 @@ import WhatsAppConfig from "@/pages/WhatsAppConfig";
 import SecurityAuditor from "@/pages/SecurityAuditor";
 import Pricing from "@/pages/Pricing";
 import AdminPanel from "@/pages/AdminPanel";
+import AdminDiagnostics from "@/pages/AdminDiagnostics";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
