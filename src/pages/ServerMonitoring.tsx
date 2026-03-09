@@ -105,7 +105,6 @@ function UsageBar({ value, label, icon: Icon }: { value: number | null; label: s
 export default function ServerMonitoring() {
   const [addOpen, setAddOpen] = useState(false);
   const [hostname, setHostname] = useState("");
-  const [ipAddress, setIpAddress] = useState("");
   const [generatedToken, setGeneratedToken] = useState("");
   const [selectedServer, setSelectedServer] = useState<ServerRow | null>(null);
   const { toast } = useToast();
