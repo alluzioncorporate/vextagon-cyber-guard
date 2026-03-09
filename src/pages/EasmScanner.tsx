@@ -18,8 +18,9 @@ export default function EasmScanner() {
   const [scanning, setScanning] = useState(false);
   const [results, setResults] = useState<ScanResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [shodanEnabled, setShodanEnabled] = useState(false);
 
-  const handleScan = () => {
+  const handleScan = async () => {
     const validation = validateDomain(domain);
     if (!validation.valid) {
       setError(validation.reason || "Domínio inválido");
@@ -28,12 +29,23 @@ export default function EasmScanner() {
     setError(null);
     setScanning(true);
     setResults(null);
+    setShodanEnabled(false);
 
-    // Simulate network delay
-    setTimeout(() => {
+    try {
+      const { data, error: fnError } = await supabase.functions.invoke('easm-scan', {
+        body: { domain: domain.trim().toLowerCase() }
+      });
+      
+      if (fnError) throw new Error(fnError.message);
+      if (data?.error) throw new Error(data.error);
+      
+      setShodanEnabled(data.shodanEnabled || false);
+      setResults(data as ScanResult);
+    } catch (err: any) {
+      setError(err.message || "Erro ao realizar scan. Tente novamente.");
+    } finally {
       setScanning(false);
-      setResults(generateScanResults(domain.trim().toLowerCase()));
-    }, 2500);
+    }
   };
 
   const scoreColor = (s: number) => s >= 80 ? "text-success" : s >= 60 ? "text-warning" : "severity-critical";
