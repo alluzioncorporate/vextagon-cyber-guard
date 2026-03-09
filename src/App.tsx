@@ -23,6 +23,11 @@ import TechStackProfiler from "@/pages/TechStackProfiler";
 import PhishingSimulator from "@/pages/PhishingSimulator";
 import HoneyTokenGenerator from "@/pages/HoneyTokenGenerator";
 import ServerMonitoring from "@/pages/ServerMonitoring";
+import PentestArsenal from "@/pages/PentestArsenal";
+import DarkWebMonitor from "@/pages/DarkWebMonitor";
+import ThreatIntel from "@/pages/ThreatIntel";
+import Forensics from "@/pages/Forensics";
+import Playbooks from "@/pages/Playbooks";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -56,6 +61,13 @@ const AppRoutes = () => (
     <Route path="/phishing-simulator" element={<ProtectedRoute><AppLayout><PhishingSimulator /></AppLayout></ProtectedRoute>} />
     <Route path="/honey-token-generator" element={<ProtectedRoute><AppLayout><HoneyTokenGenerator /></AppLayout></ProtectedRoute>} />
     <Route path="/dashboard/servers" element={<ProtectedRoute><AppLayout><ServerMonitoring /></AppLayout></ProtectedRoute>} />
+    {/* DOMO 3 - Elite */}
+    <Route path="/pentest-arsenal" element={<ProtectedRoute><AppLayout><PentestArsenal /></AppLayout></ProtectedRoute>} />
+    <Route path="/dark-web-monitor" element={<ProtectedRoute><AppLayout><DarkWebMonitor /></AppLayout></ProtectedRoute>} />
+    <Route path="/threat-intel" element={<ProtectedRoute><AppLayout><ThreatIntel /></AppLayout></ProtectedRoute>} />
+    <Route path="/forensics" element={<ProtectedRoute><AppLayout><Forensics /></AppLayout></ProtectedRoute>} />
+    <Route path="/playbooks" element={<ProtectedRoute><AppLayout><Playbooks /></AppLayout></ProtectedRoute>} />
+    {/* System */}
     <Route path="/pricing" element={<ProtectedRoute><AppLayout><Pricing /></AppLayout></ProtectedRoute>} />
     <Route path="/admin" element={<ProtectedRoute><AppLayout><AdminPanel /></AppLayout></ProtectedRoute>} />
     <Route path="/admin/diagnostics" element={<ProtectedRoute><AppLayout><AdminDiagnostics /></AppLayout></ProtectedRoute>} />
