@@ -31,6 +31,7 @@ import Playbooks from "@/pages/Playbooks";
 import Academy from "@/pages/Academy";
 import SocialEngineering from "@/pages/SocialEngineering";
 import Domo3Setup from "@/pages/Domo3Setup";
+import PasswordManager from "@/pages/PasswordManager";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
