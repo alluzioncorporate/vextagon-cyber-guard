@@ -105,7 +105,6 @@ function UsageBar({ value, label, icon: Icon }: { value: number | null; label: s
 export default function ServerMonitoring() {
   const [addOpen, setAddOpen] = useState(false);
   const [hostname, setHostname] = useState("");
-  const [ipAddress, setIpAddress] = useState("");
   const [generatedToken, setGeneratedToken] = useState("");
   const [selectedServer, setSelectedServer] = useState<ServerRow | null>(null);
   const { toast } = useToast();
@@ -133,7 +132,7 @@ export default function ServerMonitoring() {
       const token = generateToken();
       const { error } = await supabase.from("server_monitoring").insert({
         hostname: hostname || "novo-servidor",
-        ip_address: ipAddress || "0.0.0.0",
+        ip_address: "0.0.0.0",
         agent_token: token,
         user_id: user.id,
       });
@@ -168,7 +167,7 @@ export default function ServerMonitoring() {
             Monitoramento de servidores via agente
           </p>
         </div>
-        <Button onClick={() => { setAddOpen(true); setGeneratedToken(""); setHostname(""); setIpAddress(""); }}>
+        <Button onClick={() => { setAddOpen(true); setGeneratedToken(""); setHostname(""); }}>
           <Plus className="h-4 w-4 mr-1" /> Adicionar Servidor
         </Button>
       </div>
@@ -244,14 +243,6 @@ export default function ServerMonitoring() {
                   placeholder="ex: srv-prod-01"
                   value={hostname}
                   onChange={(e) => setHostname(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>IP Address</Label>
-                <Input
-                  placeholder="ex: 192.168.1.100"
-                  value={ipAddress}
-                  onChange={(e) => setIpAddress(e.target.value)}
                 />
               </div>
               <DialogFooter>
