@@ -29,6 +29,7 @@ import ThreatIntel from "@/pages/ThreatIntel";
 import Forensics from "@/pages/Forensics";
 import Playbooks from "@/pages/Playbooks";
 import Academy from "@/pages/Academy";
+import SocialEngineering from "@/pages/SocialEngineering";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -62,6 +63,7 @@ const AppRoutes = () => (
     <Route path="/phishing-simulator" element={<ProtectedRoute><AppLayout><PhishingSimulator /></AppLayout></ProtectedRoute>} />
     <Route path="/honey-token-generator" element={<ProtectedRoute><AppLayout><HoneyTokenGenerator /></AppLayout></ProtectedRoute>} />
     <Route path="/dashboard/servers" element={<ProtectedRoute><AppLayout><ServerMonitoring /></AppLayout></ProtectedRoute>} />
+    <Route path="/social-engineering" element={<ProtectedRoute><AppLayout><SocialEngineering /></AppLayout></ProtectedRoute>} />
     {/* DOMO 3 - Elite */}
     <Route path="/pentest-arsenal" element={<ProtectedRoute><AppLayout><PentestArsenal /></AppLayout></ProtectedRoute>} />
     <Route path="/dark-web-monitor" element={<ProtectedRoute><AppLayout><DarkWebMonitor /></AppLayout></ProtectedRoute>} />
