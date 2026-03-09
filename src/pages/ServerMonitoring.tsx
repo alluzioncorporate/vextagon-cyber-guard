@@ -427,6 +427,28 @@ export default function ServerMonitoring() {
           )}
         </DrawerContent>
       </Drawer>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={!!deleteConfirmId} onOpenChange={(open) => !open && setDeleteConfirmId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Remover Servidor</DialogTitle>
+            <DialogDescription>
+              Tem certeza? O agente será desvinculado e os dados de monitoramento serão apagados permanentemente.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button variant="secondary" onClick={() => setDeleteConfirmId(null)}>Cancelar</Button>
+            <Button
+              variant="destructive"
+              disabled={deleteServer.isPending}
+              onClick={() => { if (deleteConfirmId) deleteServer.mutate(deleteConfirmId); setDeleteConfirmId(null); }}
+            >
+              {deleteServer.isPending ? "Removendo..." : "Remover"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
