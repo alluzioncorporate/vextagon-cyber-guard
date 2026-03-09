@@ -47,6 +47,7 @@ import {
   Container,
   FileText,
   Cog,
+  Trash2,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
@@ -191,6 +192,23 @@ export default function ServerMonitoring() {
     setSelectedModules(prev => prev.includes(id) ? prev.filter(m => m !== id) : [...prev, id]);
   };
 
+  const deleteServer = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("server_monitoring").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["servers"] });
+      setSelectedServer(null);
+      toast({ title: "Servidor removido" });
+    },
+    onError: (err: Error) => {
+      toast({ title: "Erro", description: err.message, variant: "destructive" });
+    },
+  });
+
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+
   // ── Render ──
 
   return (
@@ -227,10 +245,20 @@ export default function ServerMonitoring() {
                     <Server className="h-4 w-4 text-primary" />
                     {s.hostname}
                   </CardTitle>
-                  <Badge variant="outline" className="text-[10px]">
-                    <span className={`mr-1.5 inline-block h-1.5 w-1.5 rounded-full ${getStatusColor(s.last_seen).replace("text-", "bg-").replace("severity-critical", "bg-destructive")}`} />
-                    {getStatusLabel(s.last_seen)}
-                  </Badge>
+                  <div className="flex items-center gap-1.5">
+                    <Badge variant="outline" className="text-[10px]">
+                      <span className={`mr-1.5 inline-block h-1.5 w-1.5 rounded-full ${getStatusColor(s.last_seen).replace("text-", "bg-").replace("severity-critical", "bg-destructive")}`} />
+                      {getStatusLabel(s.last_seen)}
+                    </Badge>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                      onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(s.id); }}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
                 </div>
                 <p className="font-mono text-xs text-muted-foreground">{s.ip_address}</p>
               </CardHeader>
@@ -399,6 +427,28 @@ export default function ServerMonitoring() {
           )}
         </DrawerContent>
       </Drawer>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={!!deleteConfirmId} onOpenChange={(open) => !open && setDeleteConfirmId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Remover Servidor</DialogTitle>
+            <DialogDescription>
+              Tem certeza? O agente será desvinculado e os dados de monitoramento serão apagados permanentemente.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button variant="secondary" onClick={() => setDeleteConfirmId(null)}>Cancelar</Button>
+            <Button
+              variant="destructive"
+              disabled={deleteServer.isPending}
+              onClick={() => { if (deleteConfirmId) deleteServer.mutate(deleteConfirmId); setDeleteConfirmId(null); }}
+            >
+              {deleteServer.isPending ? "Removendo..." : "Remover"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
