@@ -18,6 +18,7 @@ import CloudLeakScanner from "@/pages/CloudLeakScanner";
 import TechStackProfiler from "@/pages/TechStackProfiler";
 import PhishingSimulator from "@/pages/PhishingSimulator";
 import HoneyTokenGenerator from "@/pages/HoneyTokenGenerator";
+import ServerMonitoring from "@/pages/ServerMonitoring";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
