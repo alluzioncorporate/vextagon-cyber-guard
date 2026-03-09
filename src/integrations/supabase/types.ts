@@ -262,11 +262,13 @@ export type Database = {
           cpu_usage: number | null
           created_at: string
           disk_usage: number | null
+          extra_data: Json | null
           hostname: string
           id: string
           install_expires_at: string | null
           ip_address: string
           last_seen: string
+          modules: Json | null
           open_ports: Json | null
           os_info: Json | null
           ram_usage: number | null
@@ -279,11 +281,13 @@ export type Database = {
           cpu_usage?: number | null
           created_at?: string
           disk_usage?: number | null
+          extra_data?: Json | null
           hostname: string
           id?: string
           install_expires_at?: string | null
           ip_address: string
           last_seen?: string
+          modules?: Json | null
           open_ports?: Json | null
           os_info?: Json | null
           ram_usage?: number | null
@@ -296,11 +300,13 @@ export type Database = {
           cpu_usage?: number | null
           created_at?: string
           disk_usage?: number | null
+          extra_data?: Json | null
           hostname?: string
           id?: string
           install_expires_at?: string | null
           ip_address?: string
           last_seen?: string
+          modules?: Json | null
           open_ports?: Json | null
           os_info?: Json | null
           ram_usage?: number | null
