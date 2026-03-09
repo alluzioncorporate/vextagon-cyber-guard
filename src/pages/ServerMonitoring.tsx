@@ -245,14 +245,6 @@ export default function ServerMonitoring() {
                   onChange={(e) => setHostname(e.target.value)}
                 />
               </div>
-              <div className="space-y-2">
-                <Label>IP Address</Label>
-                <Input
-                  placeholder="ex: 192.168.1.100"
-                  value={ipAddress}
-                  onChange={(e) => setIpAddress(e.target.value)}
-                />
-              </div>
               <DialogFooter>
                 <Button onClick={() => addServer.mutate()} disabled={addServer.isPending}>
                   {addServer.isPending ? "Gerando..." : "Gerar Token & Comando"}
