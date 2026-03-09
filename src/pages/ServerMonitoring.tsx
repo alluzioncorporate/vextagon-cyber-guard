@@ -276,8 +276,9 @@ export default function ServerMonitoring() {
                 <Label>Comando de Instalação</Label>
                 <div className="rounded bg-secondary p-3">
                   <code className="font-mono text-xs text-cyan break-all">
-                    curl -sSL https://vextagon.com/install.sh | bash -s -- --token {generatedToken}
+                    curl -sSL "{getInstallUrl(generatedToken)}" | sudo bash
                   </code>
+                  <p className="mt-2 text-[10px] text-destructive font-medium">⏱ Link expira em 1 minuto · uso único</p>
                 </div>
                 <Button
                   variant="outline"
