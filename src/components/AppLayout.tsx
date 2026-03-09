@@ -17,9 +17,11 @@ import {
   Mail,
   Eye,
   Server,
+  LogOut,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "WAF & Defesa" },
@@ -41,6 +43,9 @@ const navItems = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
+  const { user, signOut } = useAuth();
+
+  const displayName = user?.user_metadata?.full_name || "Usuário";
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -55,7 +60,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           {!collapsed && (
             <div className="flex items-center gap-2">
               <Shield className="h-5 w-5 text-primary" />
-              <span className="text-sm font-semibold tracking-widest text-foreground">
+              <span className="font-mono text-sm font-semibold tracking-widest text-foreground">
                 VEXTAGON
               </span>
             </div>
@@ -70,7 +75,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 space-y-0.5 p-2">
+        <nav className="flex-1 space-y-0.5 overflow-y-auto p-2">
           {navItems.map((item) => {
             const isActive = location.pathname === item.to;
             return (
@@ -91,14 +96,34 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        {/* Footer */}
-        {!collapsed && (
-          <div className="border-t border-border px-3 py-3">
-            <p className="font-mono text-[10px] text-muted-foreground">
-              Alluzion Corporate
-            </p>
-          </div>
-        )}
+        {/* Footer with user info and logout */}
+        <div className="border-t border-border px-3 py-3">
+          {!collapsed ? (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="min-w-0">
+                  <p className="font-mono text-[11px] font-medium text-foreground truncate">{displayName}</p>
+                  <p className="font-mono text-[9px] text-muted-foreground">Alluzion Corporate</p>
+                </div>
+                <button
+                  onClick={signOut}
+                  className="rounded p-1.5 text-muted-foreground transition-colors hover:text-destructive hover:bg-destructive/10"
+                  title="Sair"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={signOut}
+              className="mx-auto flex rounded p-1.5 text-muted-foreground transition-colors hover:text-destructive"
+              title="Sair"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+            </button>
+          )}
+        </div>
       </aside>
 
       <main className={cn("flex-1 transition-all duration-200", collapsed ? "ml-14" : "ml-56")}>

