@@ -50,7 +50,6 @@ const domoGroups = [
       { to: "/tech-stack-profiler", icon: Code2, label: "Tech Stack" },
       { to: "/data-leaks", icon: AlertTriangle, label: "OSINT & Leaks" },
       { to: "/auditor", icon: FileText, label: "Auditor" },
-      { to: "/alerts", icon: Bell, label: "Alertas" },
     ],
   },
   {
