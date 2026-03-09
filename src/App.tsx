@@ -13,6 +13,8 @@ import AlertsCenter from "@/pages/AlertsCenter";
 import WhatsAppConfig from "@/pages/WhatsAppConfig";
 import SecurityAuditor from "@/pages/SecurityAuditor";
 import Pricing from "@/pages/Pricing";
+import About from "@/pages/About";
+import Support from "@/pages/Support";
 import AdminPanel from "@/pages/AdminPanel";
 import AdminDiagnostics from "@/pages/AdminDiagnostics";
 import SubdomainFinder from "@/pages/SubdomainFinder";
