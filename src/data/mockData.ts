@@ -53,15 +53,41 @@ export const domoTiers = {
     priceValue: 497,
     color: "destructive",
     icon: "Skull",
-    description: "Nível elite. Ferramentas ofensivas do Kali Linux, auditoria Lynis diária, Honey Tokens, SQL Injection testing e brute force controlado. Wazuh + Velociraptor em um painel.",
+    description: "Nível ELITE. Ferramentas ofensivas do Kali, Dark Web monitoring, Threat Intelligence, forense digital, detecção de malware e playbooks automáticos de resposta a incidentes.",
     features: [
+      // Base
       "Tudo do DOMO 1 + DOMO 2",
-      "Nikto (scanner de vulnerabilidades web)",
-      "SQLMap (teste de SQL Injection)",
+      // Pentest Ofensivo
+      "Nuclei (scanner com 10k+ templates)",
+      "Masscan (scan de portas ultrarrápido)",
+      "Gobuster (brute force de diretórios)",
+      "Wfuzz (fuzzing de parâmetros web)",
+      "SQLMap (SQL Injection automatizado)",
       "Hydra (brute force controlado)",
-      "Lynis Audit Score diário",
+      "Nikto (scanner de vulnerabilidades web)",
+      // Honey Tokens
       "Honey Token Generator & Monitor",
-      "Análise completa de CVEs",
+      // Lynis
+      "Lynis Audit Score diário",
+      // Dark Web
+      "🕵️ Dark Web Monitor (vazamentos em fóruns)",
+      "Monitoramento de credenciais na dark web",
+      "Alertas de documentos vazados",
+      // Threat Intel
+      "🧠 Threat Intelligence em tempo real",
+      "Feed de IOCs (Indicators of Compromise)",
+      "Correlação com CVEs sendo explorados",
+      // Forense & Malware
+      "🔬 Análise forense com Volatility",
+      "YARA rules para detecção de malware",
+      "rkhunter & chkrootkit (rootkit detection)",
+      "Análise de memória de servidores",
+      // Incident Response
+      "⚡ Playbooks automáticos de resposta",
+      "Isolamento automático de ameaças",
+      "Quarentena de arquivos suspeitos",
+      "Bloqueio automático de IPs maliciosos",
+      // Reports
       "Relatórios PDF executivos",
       "Dashboard tipo Wazuh/Velociraptor",
       "Suporte prioritário 24/7",
@@ -100,7 +126,6 @@ export const domoNavGroups = [
     requiredTier: "domo2",
     items: [
       { to: "/dashboard/servers", icon: "Server", label: "Insight Agent" },
-      { to: "/whatsapp", icon: "MessageSquare", label: "WhatsApp" },
       { to: "/phishing-simulator", icon: "Mail", label: "Phishing Sim" },
     ],
   },
@@ -110,8 +135,12 @@ export const domoNavGroups = [
     color: "destructive",
     requiredTier: "domo3",
     items: [
+      { to: "/pentest-arsenal", icon: "Crosshair", label: "Pentest Arsenal" },
+      { to: "/dark-web-monitor", icon: "Ghost", label: "Dark Web" },
+      { to: "/threat-intel", icon: "Brain", label: "Threat Intel" },
+      { to: "/forensics", icon: "Microscope", label: "Forense" },
+      { to: "/playbooks", icon: "Zap", label: "Playbooks" },
       { to: "/honey-token-generator", icon: "Eye", label: "Honey Tokens" },
-      { to: "/security-auditor", icon: "FileText", label: "Lynis Audit" },
     ],
   },
 ];
