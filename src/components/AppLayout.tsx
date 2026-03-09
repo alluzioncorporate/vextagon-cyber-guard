@@ -85,7 +85,8 @@ const domoGroups = [
 const systemItems = [
   { to: "/whatsapp", icon: MessageSquare, label: "WhatsApp" },
   { to: "/pricing", icon: CreditCard, label: "Planos" },
-  { to: "/admin", icon: Users, label: "Admin" },
+  { to: "/admin", icon: Users, label: "Admin", adminOnly: true },
+  { to: "/domo3-setup", icon: Terminal, label: "Setup Arsenal", adminOnly: true },
   { to: "/academy", icon: GraduationCap, label: "Academy" },
   { to: "/support", icon: HeadphonesIcon, label: "Suporte" },
   { to: "/about", icon: Info, label: "Sobre" },
