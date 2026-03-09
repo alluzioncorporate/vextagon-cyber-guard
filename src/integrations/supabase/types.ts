@@ -253,6 +253,57 @@ export type Database = {
           },
         ]
       }
+      server_monitoring: {
+        Row: {
+          agent_token: string
+          cpu_usage: number | null
+          created_at: string
+          disk_usage: number | null
+          hostname: string
+          id: string
+          ip_address: string
+          last_seen: string
+          open_ports: Json | null
+          os_info: Json | null
+          ram_usage: number | null
+          security_updates: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          agent_token: string
+          cpu_usage?: number | null
+          created_at?: string
+          disk_usage?: number | null
+          hostname: string
+          id?: string
+          ip_address: string
+          last_seen?: string
+          open_ports?: Json | null
+          os_info?: Json | null
+          ram_usage?: number | null
+          security_updates?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          agent_token?: string
+          cpu_usage?: number | null
+          created_at?: string
+          disk_usage?: number | null
+          hostname?: string
+          id?: string
+          ip_address?: string
+          last_seen?: string
+          open_ports?: Json | null
+          os_info?: Json | null
+          ram_usage?: number | null
+          security_updates?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_domains: {
         Row: {
           added_at: string

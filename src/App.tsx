@@ -18,6 +18,7 @@ import CloudLeakScanner from "@/pages/CloudLeakScanner";
 import TechStackProfiler from "@/pages/TechStackProfiler";
 import PhishingSimulator from "@/pages/PhishingSimulator";
 import HoneyTokenGenerator from "@/pages/HoneyTokenGenerator";
+import ServerMonitoring from "@/pages/ServerMonitoring";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/tech-stack-profiler" element={<TechStackProfiler />} />
             <Route path="/phishing-simulator" element={<PhishingSimulator />} />
             <Route path="/honey-token-generator" element={<HoneyTokenGenerator />} />
+            <Route path="/dashboard/servers" element={<ServerMonitoring />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="/admin/diagnostics" element={<AdminDiagnostics />} />
