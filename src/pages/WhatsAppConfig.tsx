@@ -47,8 +47,8 @@ export default function WhatsAppConfig() {
             </div>
           </div>
           <div className={`h-2 w-2 rounded-full ${
-            connectionStatus === "connected" ? "bg-green-500" :
-            connectionStatus === "connecting" ? "bg-yellow-500 animate-pulse" :
+            connectionStatus === "connected" ? "bg-emerald-500" :
+            connectionStatus === "connecting" ? "bg-amber-500 animate-pulse" :
             "bg-muted-foreground"
           }`} />
         </div>
