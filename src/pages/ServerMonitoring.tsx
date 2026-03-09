@@ -152,10 +152,15 @@ export default function ServerMonitoring() {
     },
   });
 
+  const getInstallUrl = (token: string) => {
+    const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+    return `https://${projectId}.supabase.co/functions/v1/agent-install?token=${token}`;
+  };
+
   const copyCommand = (token: string) => {
-    const cmd = `curl -sSL https://vextagon.com/install.sh | bash -s -- --token ${token}`;
+    const cmd = `curl -sSL "${getInstallUrl(token)}" | sudo bash`;
     navigator.clipboard.writeText(cmd);
-    toast({ title: "Copiado!", description: "Comando copiado para a área de transferência." });
+    toast({ title: "Copiado!", description: "Comando copiado. Link válido por 1 minuto." });
   };
 
   return (
