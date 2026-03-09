@@ -13,6 +13,11 @@ import SecurityAuditor from "@/pages/SecurityAuditor";
 import Pricing from "@/pages/Pricing";
 import AdminPanel from "@/pages/AdminPanel";
 import AdminDiagnostics from "@/pages/AdminDiagnostics";
+import SubdomainFinder from "@/pages/SubdomainFinder";
+import CloudLeakScanner from "@/pages/CloudLeakScanner";
+import TechStackProfiler from "@/pages/TechStackProfiler";
+import PhishingSimulator from "@/pages/PhishingSimulator";
+import HoneyTokenGenerator from "@/pages/HoneyTokenGenerator";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
