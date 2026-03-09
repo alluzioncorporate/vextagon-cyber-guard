@@ -89,7 +89,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 className={cn(
                   "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] transition-colors duration-150",
                   isActive
-                    ? "bg-secondary text-cyan"
+                    ? "bg-primary/10 text-cyan border-l-2 border-l-primary"
                     : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
                 )}
               >
