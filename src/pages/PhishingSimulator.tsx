@@ -16,12 +16,7 @@ interface Campaign {
   target_emails: string[];
   email_template: string;
   created_at: string;
-  stats: {
-    sent: number;
-    opened: number;
-    clicked: number;
-    reported: number;
-  };
+  stats: any;
 }
 
 export default function PhishingSimulator() {
