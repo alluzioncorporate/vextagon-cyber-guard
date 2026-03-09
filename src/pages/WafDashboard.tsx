@@ -84,9 +84,9 @@ export default function WafDashboard() {
                 <stop offset="100%" stopColor="hsl(0,72%,51%)" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(222,15%,12%)" />
-            <XAxis dataKey="time" stroke="hsl(210,10%,35%)" fontSize={10} fontFamily="JetBrains Mono" />
-            <YAxis stroke="hsl(210,10%,35%)" fontSize={10} fontFamily="JetBrains Mono" />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(230,20%,13%)" />
+            <XAxis dataKey="time" stroke="hsl(220,12%,38%)" fontSize={10} fontFamily="JetBrains Mono" />
+            <YAxis stroke="hsl(220,12%,38%)" fontSize={10} fontFamily="JetBrains Mono" />
             <Tooltip
               contentStyle={{
                 background: "hsl(222,35%,6%)",
