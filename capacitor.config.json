@@ -1,0 +1,9 @@
+{
+  "appId": "app.lovable.d067f5a65644439f97fb4bbca468a675",
+  "appName": "Vextagon",
+  "webDir": "dist",
+  "server": {
+    "url": "https://d067f5a6-5644-439f-97fb-4bbca468a675.lovableproject.com?forceHideBadge=true",
+    "cleartext": true
+  }
+}
