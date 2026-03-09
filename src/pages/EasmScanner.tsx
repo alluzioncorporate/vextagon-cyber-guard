@@ -290,13 +290,15 @@ export default function EasmScanner() {
               <ShieldAlert className="h-4 w-4 text-primary" />
               <h2 className="v-section-title">Recomendações de Segurança</h2>
             </div>
-            <Alert className="mb-3 bg-warning/10 border-warning/20">
-              <AlertCircle className="h-3.5 w-3.5 text-warning" />
-              <AlertDescription className="text-[11px] text-muted-foreground ml-1">
-                <strong className="text-warning">Nota:</strong> Esta ferramenta usa simulação determinística para demonstração. 
-                Para análise real, conecte APIs de DNS, SSL e Shodan via edge functions.
-              </AlertDescription>
-            </Alert>
+            {!shodanEnabled && (
+              <Alert className="mb-3 bg-secondary/60 border-border">
+                <Cpu className="h-3.5 w-3.5 text-muted-foreground" />
+                <AlertDescription className="text-[11px] text-muted-foreground ml-1">
+                  <strong className="text-foreground">Shodan não ativado:</strong> Inteligência de IP, OS e CVEs indisponível. 
+                  Adicione <code className="text-cyan font-mono text-[10px]">SHODAN_API_KEY</code> em Cloud Secrets para ativar.
+                </AlertDescription>
+              </Alert>
+            )}
             <div className="space-y-2">
               {generateRecommendations(results).map((rec, idx) => (
                 <div key={idx} className={`rounded border-l-4 bg-secondary/40 p-3 ${
