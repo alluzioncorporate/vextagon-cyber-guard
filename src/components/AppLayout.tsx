@@ -83,6 +83,7 @@ const systemItems = [
   { to: "/whatsapp", icon: MessageSquare, label: "WhatsApp" },
   { to: "/pricing", icon: CreditCard, label: "Planos" },
   { to: "/admin", icon: Users, label: "Admin" },
+  { to: "/academy", icon: GraduationCap, label: "Academy" },
   { to: "/support", icon: HeadphonesIcon, label: "Suporte" },
   { to: "/about", icon: Info, label: "Sobre" },
 ];

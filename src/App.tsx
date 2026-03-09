@@ -74,6 +74,7 @@ const AppRoutes = () => (
     <Route path="/admin/diagnostics" element={<ProtectedRoute><AppLayout><AdminDiagnostics /></AppLayout></ProtectedRoute>} />
     <Route path="/support" element={<ProtectedRoute><AppLayout><Support /></AppLayout></ProtectedRoute>} />
     <Route path="/about" element={<ProtectedRoute><AppLayout><About /></AppLayout></ProtectedRoute>} />
+    <Route path="/academy" element={<ProtectedRoute><AppLayout><Academy /></AppLayout></ProtectedRoute>} />
     <Route path="*" element={<NotFound />} />
   </Routes>
 );
