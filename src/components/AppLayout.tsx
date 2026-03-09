@@ -100,7 +100,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     "DOMO 3": true,
   });
   const location = useLocation();
-  const { user, signOut } = useAuth();
+  const { user, signOut, isAdmin } = useAuth();
 
   const displayName = user?.user_metadata?.full_name || "Usuário";
 
