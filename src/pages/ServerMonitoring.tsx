@@ -144,8 +144,9 @@ export default function ServerMonitoring() {
       queryClient.invalidateQueries({ queryKey: ["servers"] });
       toast({ title: "Servidor adicionado", description: "Use o comando abaixo para instalar o agente." });
     },
-    onError: () => {
-      toast({ title: "Erro", description: "Falha ao adicionar servidor.", variant: "destructive" });
+    onError: (err: Error) => {
+      console.error("Erro ao adicionar servidor:", err);
+      toast({ title: "Erro", description: err?.message || "Falha ao adicionar servidor.", variant: "destructive" });
     },
   });
 
