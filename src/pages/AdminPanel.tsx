@@ -125,11 +125,11 @@ export default function AdminPanel() {
   });
 
   // Save baileys URL
-  const handleSaveBaileysUrl = async () => {
+  const handleSaveSetting = async (key: string, value: string, label: string) => {
     setSavingUrl(true);
     try {
-      await invokeAdmin("save_setting", { key: "baileys_url", value: baileysUrl });
-      toast({ title: "URL do Baileys salva" });
+      await invokeAdmin("save_setting", { key, value });
+      toast({ title: `${label} salvo` });
     } catch (err: any) {
       toast({ title: "Erro", description: err.message, variant: "destructive" });
     } finally {
