@@ -264,6 +264,7 @@ export type Database = {
           disk_usage: number | null
           hostname: string
           id: string
+          install_expires_at: string | null
           ip_address: string
           last_seen: string
           open_ports: Json | null
@@ -280,6 +281,7 @@ export type Database = {
           disk_usage?: number | null
           hostname: string
           id?: string
+          install_expires_at?: string | null
           ip_address: string
           last_seen?: string
           open_ports?: Json | null
@@ -296,6 +298,7 @@ export type Database = {
           disk_usage?: number | null
           hostname?: string
           id?: string
+          install_expires_at?: string | null
           ip_address?: string
           last_seen?: string
           open_ports?: Json | null
