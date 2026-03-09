@@ -37,8 +37,8 @@ export default function Auth() {
       toast({ title: "CPF inválido", description: "Informe um CPF com 11 dígitos.", variant: "destructive" });
       return;
     }
-    if (password.length < 6) {
-      toast({ title: "Senha fraca", description: "A senha deve ter no mínimo 6 caracteres.", variant: "destructive" });
+    if (password.length < 12) {
+      toast({ title: "Senha fraca", description: "A senha deve ter no mínimo 12 caracteres.", variant: "destructive" });
       return;
     }
 
