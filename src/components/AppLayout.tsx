@@ -18,6 +18,8 @@ import {
   Eye,
   Server,
   LogOut,
+  Info,
+  HeadphonesIcon,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -38,6 +40,8 @@ const navItems = [
   { to: "/auditor", icon: FileText, label: "Auditor" },
   { to: "/pricing", icon: CreditCard, label: "Planos" },
   { to: "/admin", icon: Users, label: "Admin" },
+  { to: "/support", icon: HeadphonesIcon, label: "Suporte" },
+  { to: "/about", icon: Info, label: "Sobre" },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {

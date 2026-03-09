@@ -13,6 +13,8 @@ import AlertsCenter from "@/pages/AlertsCenter";
 import WhatsAppConfig from "@/pages/WhatsAppConfig";
 import SecurityAuditor from "@/pages/SecurityAuditor";
 import Pricing from "@/pages/Pricing";
+import About from "@/pages/About";
+import Support from "@/pages/Support";
 import AdminPanel from "@/pages/AdminPanel";
 import AdminDiagnostics from "@/pages/AdminDiagnostics";
 import SubdomainFinder from "@/pages/SubdomainFinder";
@@ -57,6 +59,8 @@ const AppRoutes = () => (
     <Route path="/pricing" element={<ProtectedRoute><AppLayout><Pricing /></AppLayout></ProtectedRoute>} />
     <Route path="/admin" element={<ProtectedRoute><AppLayout><AdminPanel /></AppLayout></ProtectedRoute>} />
     <Route path="/admin/diagnostics" element={<ProtectedRoute><AppLayout><AdminDiagnostics /></AppLayout></ProtectedRoute>} />
+    <Route path="/support" element={<ProtectedRoute><AppLayout><Support /></AppLayout></ProtectedRoute>} />
+    <Route path="/about" element={<ProtectedRoute><AppLayout><About /></AppLayout></ProtectedRoute>} />
     <Route path="*" element={<NotFound />} />
   </Routes>
 );
