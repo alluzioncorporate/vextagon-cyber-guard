@@ -71,7 +71,7 @@ const domoGroups = [
     bgClass: "bg-destructive/5",
     borderClass: "border-l-destructive",
     items: [
-      { to: "/domo3-setup", icon: Terminal, label: "Setup Arsenal" },
+      
       { to: "/pentest-arsenal", icon: Crosshair, label: "Pentest Arsenal" },
       { to: "/dark-web-monitor", icon: Ghost, label: "Dark Web" },
       { to: "/threat-intel", icon: Brain, label: "Threat Intel" },
