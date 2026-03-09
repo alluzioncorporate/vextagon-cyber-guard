@@ -42,6 +42,7 @@ const App = () => (
             <Route path="/tech-stack-profiler" element={<TechStackProfiler />} />
             <Route path="/phishing-simulator" element={<PhishingSimulator />} />
             <Route path="/honey-token-generator" element={<HoneyTokenGenerator />} />
+            <Route path="/dashboard/servers" element={<ServerMonitoring />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="/admin/diagnostics" element={<AdminDiagnostics />} />

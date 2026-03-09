@@ -29,6 +29,7 @@ const navItems = [
   { to: "/tech-stack-profiler", icon: Code2, label: "Tech Stack" },
   { to: "/phishing-simulator", icon: Mail, label: "Phishing" },
   { to: "/honey-token-generator", icon: Eye, label: "Honey Tokens" },
+  { to: "/dashboard/servers", icon: Server, label: "Insight Agent" },
   { to: "/data-leaks", icon: AlertTriangle, label: "Vazamentos" },
   { to: "/alerts", icon: Bell, label: "Alertas" },
   { to: "/whatsapp", icon: MessageSquare, label: "WhatsApp" },
