@@ -89,8 +89,8 @@ export default function WafDashboard() {
             <YAxis stroke="hsl(220,12%,38%)" fontSize={10} fontFamily="JetBrains Mono" />
             <Tooltip
               contentStyle={{
-                background: "hsl(222,35%,6%)",
-                border: "1px solid hsl(222,15%,15%)",
+                background: "hsl(230,40%,7%)",
+                border: "1px solid hsl(230,20%,16%)",
                 borderRadius: "6px",
                 fontFamily: "JetBrains Mono",
                 fontSize: 11,
