@@ -132,7 +132,7 @@ export default function ServerMonitoring() {
       const token = generateToken();
       const { error } = await supabase.from("server_monitoring").insert({
         hostname: hostname || "novo-servidor",
-        ip_address: ipAddress || "0.0.0.0",
+        ip_address: "0.0.0.0",
         agent_token: token,
         user_id: user.id,
       });
