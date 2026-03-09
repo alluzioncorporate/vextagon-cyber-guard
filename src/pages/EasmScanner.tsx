@@ -234,6 +234,9 @@ export default function EasmScanner() {
               <div className="flex items-center gap-2 mb-3">
                 <Cpu className="h-3.5 w-3.5 text-primary" />
                 <p className="v-section-title">Shodan Intelligence</p>
+                {!shodanEnabled && (
+                  <span className="ml-auto font-mono text-[9px] px-1.5 py-0.5 rounded bg-secondary text-muted-foreground">opcional</span>
+                )}
               </div>
               <div className="space-y-1.5">
                 {[
