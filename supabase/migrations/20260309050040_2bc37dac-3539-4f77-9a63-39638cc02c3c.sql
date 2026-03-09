@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN recovery_email TEXT DEFAULT NULL;
