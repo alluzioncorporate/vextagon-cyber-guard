@@ -2,3 +2,6 @@ project_id = "kpndifytekyjjqlhjnqu"
 
 [functions.agent-report]
 verify_jwt = false
+
+[functions.agent-install]
+verify_jwt = false
