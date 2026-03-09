@@ -28,6 +28,7 @@ import DarkWebMonitor from "@/pages/DarkWebMonitor";
 import ThreatIntel from "@/pages/ThreatIntel";
 import Forensics from "@/pages/Forensics";
 import Playbooks from "@/pages/Playbooks";
+import Academy from "@/pages/Academy";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -73,6 +74,7 @@ const AppRoutes = () => (
     <Route path="/admin/diagnostics" element={<ProtectedRoute><AppLayout><AdminDiagnostics /></AppLayout></ProtectedRoute>} />
     <Route path="/support" element={<ProtectedRoute><AppLayout><Support /></AppLayout></ProtectedRoute>} />
     <Route path="/about" element={<ProtectedRoute><AppLayout><About /></AppLayout></ProtectedRoute>} />
+    <Route path="/academy" element={<ProtectedRoute><AppLayout><Academy /></AppLayout></ProtectedRoute>} />
     <Route path="*" element={<NotFound />} />
   </Routes>
 );
