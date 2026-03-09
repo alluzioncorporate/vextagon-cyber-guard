@@ -245,6 +245,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           {children}
         </div>
       </main>
+
+      <RecoveryEmailPrompt />
     </div>
   );
 }
