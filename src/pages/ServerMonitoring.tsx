@@ -130,19 +130,21 @@ export default function ServerMonitoring() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Não autenticado");
       const token = generateToken();
+      const expiresAt = new Date(Date.now() + 60 * 1000).toISOString(); // 1 minute
       const { error } = await supabase.from("server_monitoring").insert({
         hostname: hostname || "novo-servidor",
         ip_address: "0.0.0.0",
         agent_token: token,
         user_id: user.id,
-      });
+        install_expires_at: expiresAt,
+      } as any);
       if (error) throw error;
       return token;
     },
     onSuccess: (token) => {
       setGeneratedToken(token);
       queryClient.invalidateQueries({ queryKey: ["servers"] });
-      toast({ title: "Servidor adicionado", description: "Use o comando abaixo para instalar o agente." });
+      toast({ title: "Servidor adicionado", description: "Link válido por 1 minuto. Use o comando abaixo." });
     },
     onError: (err: Error) => {
       console.error("Erro ao adicionar servidor:", err);
