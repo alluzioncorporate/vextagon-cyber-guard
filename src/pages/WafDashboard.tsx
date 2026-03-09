@@ -76,8 +76,8 @@ export default function WafDashboard() {
           <AreaChart data={mockWafData.trafficTimeline}>
             <defs>
               <linearGradient id="totalG" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(185,100%,50%)" stopOpacity={0.15} />
-                <stop offset="100%" stopColor="hsl(185,100%,50%)" stopOpacity={0} />
+                <stop offset="0%" stopColor="hsl(245,80%,62%)" stopOpacity={0.2} />
+                <stop offset="100%" stopColor="hsl(245,80%,62%)" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="blockedG" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="hsl(0,72%,51%)" stopOpacity={0.2} />
