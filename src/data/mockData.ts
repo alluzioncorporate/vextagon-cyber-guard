@@ -41,6 +41,8 @@ export const domoTiers = {
       "Logs de autenticação (SSH, sudo)",
       "Atualizações de segurança pendentes",
       "Alertas WhatsApp em tempo real",
+      "🚨 Central de Alertas em Tempo Real",
+      "Filtro de alertas enviados ao WhatsApp",
       "Phishing Simulator (campanhas internas)",
       "🔐 Gerenciador de Senhas Ultra-Avançado",
       "Gerador de senhas criptográficas",
@@ -120,7 +122,6 @@ export const domoNavGroups = [
       { to: "/tech-stack-profiler", icon: "Code2", label: "Tech Stack" },
       { to: "/data-leaks", icon: "AlertTriangle", label: "OSINT & Leaks" },
       { to: "/auditor", icon: "FileText", label: "Auditor" },
-      { to: "/alerts", icon: "Bell", label: "Alertas" },
     ],
   },
   {
@@ -130,6 +131,7 @@ export const domoNavGroups = [
     requiredTier: "domo2",
     items: [
       { to: "/dashboard/servers", icon: "Server", label: "Insight Agent" },
+      { to: "/alerts", icon: "Bell", label: "Central Alertas" },
       { to: "/phishing-simulator", icon: "Mail", label: "Phishing Sim" },
       { to: "/social-engineering", icon: "Users", label: "Eng. Social" },
       { to: "/password-manager", icon: "Key", label: "Senhas" },
