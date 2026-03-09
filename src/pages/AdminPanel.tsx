@@ -39,8 +39,6 @@ export default function AdminPanel() {
   const queryClient = useQueryClient();
   const [deleteConfirm, setDeleteConfirm] = useState<AdminUser | null>(null);
   const [baileysUrl, setBaileysUrl] = useState("");
-  const [vpsUrl, setVpsUrl] = useState("");
-  const [vpsApiKey, setVpsApiKey] = useState("");
   const [savingUrl, setSavingUrl] = useState(false);
 
   const invokeAdmin = async (action: string, body?: Record<string, unknown>, method: string = "POST") => {
