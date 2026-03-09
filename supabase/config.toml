@@ -1,1 +1,4 @@
 project_id = "kpndifytekyjjqlhjnqu"
+
+[functions.agent-report]
+verify_jwt = false
