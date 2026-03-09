@@ -11,6 +11,11 @@ import {
   ChevronLeft,
   ChevronRight,
   MessageSquare,
+  Search,
+  Cloud,
+  Code2,
+  Mail,
+  Eye,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -18,6 +23,11 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "WAF & Defesa" },
   { to: "/easm", icon: Radar, label: "EASM Scanner" },
+  { to: "/subdomain-finder", icon: Search, label: "Subdomínios" },
+  { to: "/cloud-leak-scanner", icon: Cloud, label: "Cloud Leaks" },
+  { to: "/tech-stack-profiler", icon: Code2, label: "Tech Stack" },
+  { to: "/phishing-simulator", icon: Mail, label: "Phishing" },
+  { to: "/honey-token-generator", icon: Eye, label: "Honey Tokens" },
   { to: "/data-leaks", icon: AlertTriangle, label: "Vazamentos" },
   { to: "/alerts", icon: Bell, label: "Alertas" },
   { to: "/whatsapp", icon: MessageSquare, label: "WhatsApp" },

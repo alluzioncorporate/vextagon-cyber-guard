@@ -36,6 +36,11 @@ const App = () => (
             <Route path="/alerts" element={<AlertsCenter />} />
             <Route path="/whatsapp" element={<WhatsAppConfig />} />
             <Route path="/auditor" element={<SecurityAuditor />} />
+            <Route path="/subdomain-finder" element={<SubdomainFinder />} />
+            <Route path="/cloud-leak-scanner" element={<CloudLeakScanner />} />
+            <Route path="/tech-stack-profiler" element={<TechStackProfiler />} />
+            <Route path="/phishing-simulator" element={<PhishingSimulator />} />
+            <Route path="/honey-token-generator" element={<HoneyTokenGenerator />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="/admin/diagnostics" element={<AdminDiagnostics />} />
