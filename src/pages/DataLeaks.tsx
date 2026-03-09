@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { AlertTriangle, ShieldCheck, Eye, EyeOff } from "lucide-react";
 import { mockLeakedCredentials } from "@/data/mockData";
 import { useState } from "react";
@@ -10,82 +9,70 @@ export default function DataLeaks() {
 
   return (
     <div className="space-y-6">
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="font-display text-2xl font-bold tracking-wide neon-text">Data Leak Monitor</h1>
-        <p className="text-sm text-muted-foreground mt-1">Monitoramento de credenciais vazadas</p>
-      </motion.div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card-hover p-5">
-          <p className="text-xs uppercase tracking-wider text-muted-foreground">Total Monitorado</p>
-          <p className="mt-2 font-mono text-3xl font-bold text-foreground">{mockLeakedCredentials.length}</p>
-        </motion.div>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass-card-hover p-5">
-          <p className="text-xs uppercase tracking-wider text-muted-foreground">Vazados</p>
-          <p className="mt-2 font-mono text-3xl font-bold status-danger">{leaked}</p>
-        </motion.div>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-card-hover p-5">
-          <p className="text-xs uppercase tracking-wider text-muted-foreground">Protegidos</p>
-          <p className="mt-2 font-mono text-3xl font-bold status-safe">{safe}</p>
-        </motion.div>
+      <div>
+        <h1 className="text-lg font-semibold tracking-wide text-foreground">Data Leak Monitor</h1>
+        <p className="text-xs text-muted-foreground mt-0.5">Monitoramento de credenciais vazadas</p>
       </div>
 
-      {/* Table */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="glass-card overflow-hidden">
-        <div className="flex items-center justify-between border-b border-border p-4">
-          <h2 className="font-display text-sm font-semibold tracking-wide text-foreground">Credenciais</h2>
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
+        {[
+          { label: "Total Monitorado", value: mockLeakedCredentials.length },
+          { label: "Vazados", value: leaked, danger: true },
+          { label: "Protegidos", value: safe, success: true },
+        ].map((s) => (
+          <div key={s.label} className="v-card p-4">
+            <span className="v-label">{s.label}</span>
+            <p className={`mt-2 v-stat ${s.danger ? "severity-critical" : s.success ? "text-success" : "text-foreground"}`}>{s.value}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="v-card overflow-hidden">
+        <div className="flex items-center justify-between border-b border-border px-4 py-3">
+          <p className="v-section-title">Credenciais</p>
           <button
             onClick={() => setShowPasswords(!showPasswords)}
-            className="flex items-center gap-1.5 rounded px-2 py-1 text-xs text-muted-foreground hover:bg-secondary hover:text-foreground"
+            className="flex items-center gap-1.5 rounded px-2 py-1 text-xs text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
           >
             {showPasswords ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
-            {showPasswords ? "Ocultar Hashes" : "Mostrar Hashes"}
+            {showPasswords ? "Ocultar" : "Mostrar Hashes"}
           </button>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-xs">
             <thead>
-              <tr className="border-b border-border text-left">
-                <th className="px-4 py-3 font-mono text-xs font-medium uppercase tracking-wider text-muted-foreground">Status</th>
-                <th className="px-4 py-3 font-mono text-xs font-medium uppercase tracking-wider text-muted-foreground">E-mail</th>
-                <th className="px-4 py-3 font-mono text-xs font-medium uppercase tracking-wider text-muted-foreground">Fonte</th>
-                <th className="px-4 py-3 font-mono text-xs font-medium uppercase tracking-wider text-muted-foreground">Data</th>
-                {showPasswords && <th className="px-4 py-3 font-mono text-xs font-medium uppercase tracking-wider text-muted-foreground">Hash</th>}
+              <tr className="border-b border-border">
+                <th className="px-4 py-2.5 text-left v-label">Status</th>
+                <th className="px-4 py-2.5 text-left v-label">E-mail</th>
+                <th className="px-4 py-2.5 text-left v-label">Fonte</th>
+                <th className="px-4 py-2.5 text-left v-label">Data</th>
+                {showPasswords && <th className="px-4 py-2.5 text-left v-label">Hash</th>}
               </tr>
             </thead>
             <tbody>
-              {mockLeakedCredentials.map((cred, i) => (
-                <motion.tr
-                  key={cred.id}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.4 + i * 0.05 }}
-                  className="border-b border-border/50 transition-colors hover:bg-secondary/30"
-                >
-                  <td className="px-4 py-3">
+              {mockLeakedCredentials.map((cred) => (
+                <tr key={cred.id} className="border-b border-border/40 hover:bg-secondary/30 transition-colors">
+                  <td className="px-4 py-2.5">
                     {cred.status === "leaked" ? (
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-bold uppercase status-danger">
-                        <AlertTriangle className="h-3 w-3" /> Vazado
+                      <span className="inline-flex items-center gap-1 font-mono text-[10px] font-medium severity-critical">
+                        <AlertTriangle className="h-3 w-3" /> VAZADO
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-2 py-0.5 font-mono text-[10px] font-bold uppercase status-safe">
-                        <ShieldCheck className="h-3 w-3" /> Protegido
+                      <span className="inline-flex items-center gap-1 font-mono text-[10px] font-medium text-success">
+                        <ShieldCheck className="h-3 w-3" /> OK
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-3 font-mono text-xs text-foreground">{cred.email}</td>
-                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{cred.source}</td>
-                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{cred.date}</td>
-                  {showPasswords && (
-                    <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{cred.passwordHash}</td>
-                  )}
-                </motion.tr>
+                  <td className="px-4 py-2.5 font-mono text-foreground">{cred.email}</td>
+                  <td className="px-4 py-2.5 font-mono text-muted-foreground">{cred.source}</td>
+                  <td className="px-4 py-2.5 font-mono text-muted-foreground">{cred.date}</td>
+                  {showPasswords && <td className="px-4 py-2.5 font-mono text-muted-foreground">{cred.passwordHash}</td>}
+                </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
