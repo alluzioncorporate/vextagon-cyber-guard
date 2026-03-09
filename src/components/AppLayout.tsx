@@ -54,7 +54,6 @@ const domoGroups = [
     borderClass: "border-l-gold",
     items: [
       { to: "/dashboard/servers", icon: Server, label: "Insight Agent" },
-      { to: "/whatsapp", icon: MessageSquare, label: "WhatsApp" },
       { to: "/phishing-simulator", icon: Mail, label: "Phishing Sim" },
     ],
   },
@@ -71,6 +70,7 @@ const domoGroups = [
 ];
 
 const systemItems = [
+  { to: "/whatsapp", icon: MessageSquare, label: "WhatsApp" },
   { to: "/pricing", icon: CreditCard, label: "Planos" },
   { to: "/admin", icon: Users, label: "Admin" },
   { to: "/support", icon: HeadphonesIcon, label: "Suporte" },
