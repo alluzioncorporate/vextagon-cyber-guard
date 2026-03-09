@@ -180,44 +180,6 @@ export default function AdminPanel() {
         ))}
       </div>
 
-      {/* VPS Kali Linux Config */}
-      <div className="v-card p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <ServerIcon className="h-3.5 w-3.5 text-primary" />
-          <p className="v-section-title">VPS Kali Linux (Ferramentas Reais)</p>
-        </div>
-        <p className="text-[11px] text-muted-foreground mb-3">
-          URL da API REST na sua VPS com Kali Linux. As ferramentas (nmap, nikto, sqlmap, hydra, etc.) serão executadas remotamente.
-        </p>
-        <div className="space-y-2">
-          <div className="flex gap-2">
-            <Input
-              value={vpsUrl}
-              onChange={(e) => setVpsUrl(e.target.value)}
-              placeholder="https://kali.seudominio.com"
-              className="bg-secondary/50 font-mono text-xs border-border flex-1"
-            />
-            <Button onClick={() => handleSaveSetting("vps_url", vpsUrl, "URL da VPS")} size="sm" disabled={savingUrl} className="text-xs">
-              {savingUrl ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5 mr-1" />}
-              Salvar
-            </Button>
-          </div>
-          <div className="flex gap-2">
-            <Input
-              value={vpsApiKey}
-              onChange={(e) => setVpsApiKey(e.target.value)}
-              placeholder="API Key da VPS (opcional)"
-              type="password"
-              className="bg-secondary/50 font-mono text-xs border-border flex-1"
-            />
-            <Button onClick={() => handleSaveSetting("vps_api_key", vpsApiKey, "API Key da VPS")} size="sm" disabled={savingUrl} className="text-xs">
-              {savingUrl ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5 mr-1" />}
-              Salvar
-            </Button>
-          </div>
-        </div>
-      </div>
-
       {/* Baileys Config */}
       <div className="v-card p-4">
         <div className="flex items-center gap-2 mb-3">
