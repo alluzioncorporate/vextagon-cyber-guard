@@ -34,7 +34,6 @@ import {
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
-import RecoveryEmailPrompt from "@/components/RecoveryEmailPrompt";
 
 const domoGroups = [
   {
@@ -245,8 +244,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           {children}
         </div>
       </main>
-
-      <RecoveryEmailPrompt />
     </div>
   );
 }

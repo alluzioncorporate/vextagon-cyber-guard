@@ -189,7 +189,6 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
-          recovery_email: string | null
           subscription_tier: string
           updated_at: string
           whatsapp_enabled: boolean
@@ -201,7 +200,6 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id: string
-          recovery_email?: string | null
           subscription_tier?: string
           updated_at?: string
           whatsapp_enabled?: boolean
@@ -213,7 +211,6 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id?: string
-          recovery_email?: string | null
           subscription_tier?: string
           updated_at?: string
           whatsapp_enabled?: boolean
