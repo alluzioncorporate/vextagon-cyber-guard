@@ -29,6 +29,7 @@ import {
   Zap,
   GraduationCap,
   Terminal,
+  Key,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -62,6 +63,7 @@ const domoGroups = [
       { to: "/dashboard/servers", icon: Server, label: "Insight Agent" },
       { to: "/phishing-simulator", icon: Mail, label: "Phishing Sim" },
       { to: "/social-engineering", icon: Users, label: "Eng. Social" },
+      { to: "/password-manager", icon: Key, label: "Senhas" },
     ],
   },
   {

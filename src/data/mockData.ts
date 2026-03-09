@@ -42,6 +42,10 @@ export const domoTiers = {
       "Atualizações de segurança pendentes",
       "Alertas WhatsApp em tempo real",
       "Phishing Simulator (campanhas internas)",
+      "🔐 Gerenciador de Senhas Ultra-Avançado",
+      "Gerador de senhas criptográficas",
+      "Análise de força de senhas",
+      "Treinamento de Engenharia Social",
       "Suporte a múltiplos servidores",
     ],
   },
@@ -127,6 +131,8 @@ export const domoNavGroups = [
     items: [
       { to: "/dashboard/servers", icon: "Server", label: "Insight Agent" },
       { to: "/phishing-simulator", icon: "Mail", label: "Phishing Sim" },
+      { to: "/social-engineering", icon: "Users", label: "Eng. Social" },
+      { to: "/password-manager", icon: "Key", label: "Senhas" },
     ],
   },
   {
