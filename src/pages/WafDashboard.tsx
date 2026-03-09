@@ -96,8 +96,8 @@ export default function WafDashboard() {
                 fontSize: 11,
               }}
             />
-            <Area type="monotone" dataKey="total" stroke="hsl(185,100%,50%)" fill="url(#totalG)" strokeWidth={1.5} />
-            <Area type="monotone" dataKey="blocked" stroke="hsl(0,72%,51%)" fill="url(#blockedG)" strokeWidth={1.5} />
+            <Area type="monotone" dataKey="total" stroke="hsl(245,80%,62%)" fill="url(#totalG)" strokeWidth={1.5} />
+            <Area type="monotone" dataKey="blocked" stroke="hsl(180,100%,50%)" fill="url(#blockedG)" strokeWidth={1.5} />
           </AreaChart>
         </ResponsiveContainer>
       </div>
