@@ -74,6 +74,7 @@ const AppRoutes = () => (
     <Route path="/honey-token-generator" element={<ProtectedRoute><AppLayout><HoneyTokenGenerator /></AppLayout></ProtectedRoute>} />
     <Route path="/dashboard/servers" element={<ProtectedRoute><AppLayout><ServerMonitoring /></AppLayout></ProtectedRoute>} />
     <Route path="/social-engineering" element={<ProtectedRoute><AppLayout><SocialEngineering /></AppLayout></ProtectedRoute>} />
+    <Route path="/password-manager" element={<ProtectedRoute><AppLayout><PasswordManager /></AppLayout></ProtectedRoute>} />
     {/* DOMO 3 - Elite */}
     <Route path="/domo3-setup" element={<AdminRoute><AppLayout><Domo3Setup /></AppLayout></AdminRoute>} />
     <Route path="/pentest-arsenal" element={<ProtectedRoute><AppLayout><PentestArsenal /></AppLayout></ProtectedRoute>} />

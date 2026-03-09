@@ -62,6 +62,7 @@ const domoGroups = [
       { to: "/dashboard/servers", icon: Server, label: "Insight Agent" },
       { to: "/phishing-simulator", icon: Mail, label: "Phishing Sim" },
       { to: "/social-engineering", icon: Users, label: "Eng. Social" },
+      { to: "/password-manager", icon: Key, label: "Senhas" },
     ],
   },
   {
