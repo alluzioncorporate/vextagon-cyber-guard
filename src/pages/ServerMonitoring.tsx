@@ -47,6 +47,7 @@ import {
   Container,
   FileText,
   Cog,
+  Trash2,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
