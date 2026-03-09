@@ -1,0 +1,1 @@
+ALTER TABLE public.server_monitoring ADD COLUMN IF NOT EXISTS install_expires_at timestamp with time zone DEFAULT null;

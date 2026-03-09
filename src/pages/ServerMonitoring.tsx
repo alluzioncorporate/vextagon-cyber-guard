@@ -130,19 +130,21 @@ export default function ServerMonitoring() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Não autenticado");
       const token = generateToken();
+      const expiresAt = new Date(Date.now() + 60 * 1000).toISOString(); // 1 minute
       const { error } = await supabase.from("server_monitoring").insert({
         hostname: hostname || "novo-servidor",
         ip_address: "0.0.0.0",
         agent_token: token,
         user_id: user.id,
-      });
+        install_expires_at: expiresAt,
+      } as any);
       if (error) throw error;
       return token;
     },
     onSuccess: (token) => {
       setGeneratedToken(token);
       queryClient.invalidateQueries({ queryKey: ["servers"] });
-      toast({ title: "Servidor adicionado", description: "Use o comando abaixo para instalar o agente." });
+      toast({ title: "Servidor adicionado", description: "Link válido por 1 minuto. Use o comando abaixo." });
     },
     onError: (err: Error) => {
       console.error("Erro ao adicionar servidor:", err);
@@ -150,10 +152,15 @@ export default function ServerMonitoring() {
     },
   });
 
+  const getInstallUrl = (token: string) => {
+    const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+    return `https://${projectId}.supabase.co/functions/v1/agent-install?token=${token}`;
+  };
+
   const copyCommand = (token: string) => {
-    const cmd = `curl -sSL https://vextagon.com/install.sh | bash -s -- --token ${token}`;
+    const cmd = `curl -sSL "${getInstallUrl(token)}" | sudo bash`;
     navigator.clipboard.writeText(cmd);
-    toast({ title: "Copiado!", description: "Comando copiado para a área de transferência." });
+    toast({ title: "Copiado!", description: "Comando copiado. Link válido por 1 minuto." });
   };
 
   return (
@@ -269,8 +276,9 @@ export default function ServerMonitoring() {
                 <Label>Comando de Instalação</Label>
                 <div className="rounded bg-secondary p-3">
                   <code className="font-mono text-xs text-cyan break-all">
-                    curl -sSL https://vextagon.com/install.sh | bash -s -- --token {generatedToken}
+                    curl -sSL "{getInstallUrl(generatedToken)}" | sudo bash
                   </code>
+                  <p className="mt-2 text-[10px] text-destructive font-medium">⏱ Link expira em 1 minuto · uso único</p>
                 </div>
                 <Button
                   variant="outline"
