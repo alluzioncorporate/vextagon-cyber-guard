@@ -80,13 +80,19 @@ export default function AdminPanel() {
 
   // Load baileys URL
   useEffect(() => {
-    const loadSetting = async () => {
+    const loadSettings = async () => {
       try {
-        const result = await invokeAdmin("get_setting", { key: "baileys_url" });
-        setBaileysUrl(result.value || "");
+        const [baileys, vps, vpsKey] = await Promise.all([
+          invokeAdmin("get_setting", { key: "baileys_url" }),
+          invokeAdmin("get_setting", { key: "vps_url" }),
+          invokeAdmin("get_setting", { key: "vps_api_key" }),
+        ]);
+        setBaileysUrl(baileys.value || "");
+        setVpsUrl(vps.value || "");
+        setVpsApiKey(vpsKey.value || "");
       } catch {}
     };
-    if (user) loadSetting();
+    if (user) loadSettings();
   }, [user]);
 
   // Update plan
