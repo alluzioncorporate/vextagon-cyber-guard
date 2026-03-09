@@ -167,7 +167,7 @@ export default function ServerMonitoring() {
             Monitoramento de servidores via agente
           </p>
         </div>
-        <Button onClick={() => { setAddOpen(true); setGeneratedToken(""); setHostname(""); setIpAddress(""); }}>
+        <Button onClick={() => { setAddOpen(true); setGeneratedToken(""); setHostname(""); }}>
           <Plus className="h-4 w-4 mr-1" /> Adicionar Servidor
         </Button>
       </div>
