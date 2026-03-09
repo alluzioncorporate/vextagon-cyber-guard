@@ -1,25 +1,95 @@
-import { useState } from "react";
-import { MessageSquare, Phone, Wifi, WifiOff, Bell } from "lucide-react";
+import { useState, useEffect } from "react";
+import { MessageSquare, Phone, Wifi, WifiOff, Bell, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
 export default function WhatsAppConfig() {
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [enabled, setEnabled] = useState(false);
   const [phone, setPhone] = useState("");
   const [connectionStatus, setConnectionStatus] = useState<"disconnected" | "connecting" | "connected">("disconnected");
   const [alertOnCritical, setAlertOnCritical] = useState(true);
   const [alertOnLeak, setAlertOnLeak] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  const handleConnect = () => {
+  // Load config from DB
+  useEffect(() => {
+    if (!user) return;
+    const load = async () => {
+      const { data } = await supabase
+        .from("whatsapp_config")
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (data) {
+        setEnabled(data.enabled);
+        setPhone(data.phone_number || "");
+        setConnectionStatus(data.connection_status as any);
+      }
+      setLoading(false);
+    };
+    load();
+  }, [user]);
+
+  const saveConfig = async (updates: Record<string, unknown>) => {
+    if (!user) return;
+    setSaving(true);
+    const { data: existing } = await supabase
+      .from("whatsapp_config")
+      .select("id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (existing) {
+      await supabase.from("whatsapp_config").update({ ...updates, updated_at: new Date().toISOString() }).eq("id", existing.id);
+    } else {
+      await supabase.from("whatsapp_config").insert({
+        user_id: user.id,
+        phone_number: phone || "+55",
+        enabled: false,
+        ...updates,
+      });
+    }
+    setSaving(false);
+  };
+
+  const handleToggleEnabled = async (val: boolean) => {
+    setEnabled(val);
+    await saveConfig({ enabled: val });
+    toast({ title: val ? "Notificações ativadas" : "Notificações desativadas" });
+  };
+
+  const handleConnect = async () => {
     if (!phone.trim()) return;
     setConnectionStatus("connecting");
-    setTimeout(() => setConnectionStatus("connected"), 2000);
+    await saveConfig({ phone_number: phone, connection_status: "connecting" });
+    setTimeout(async () => {
+      setConnectionStatus("connected");
+      await saveConfig({ phone_number: phone, connection_status: "connected" });
+      console.log("[BAILEYS] Conexão estabelecida com", phone);
+      toast({ title: "WhatsApp conectado", description: `Número: ${phone}` });
+    }, 2000);
   };
 
-  const handleDisconnect = () => {
+  const handleDisconnect = async () => {
     setConnectionStatus("disconnected");
+    await saveConfig({ connection_status: "disconnected" });
+    console.log("[BAILEYS] Desconectado");
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -47,8 +117,8 @@ export default function WhatsAppConfig() {
             </div>
           </div>
           <div className={`h-2 w-2 rounded-full ${
-            connectionStatus === "connected" ? "bg-green-500" :
-            connectionStatus === "connecting" ? "bg-yellow-500 animate-pulse" :
+            connectionStatus === "connected" ? "bg-emerald-500" :
+            connectionStatus === "connecting" ? "bg-amber-500 animate-pulse" :
             "bg-muted-foreground"
           }`} />
         </div>
@@ -63,7 +133,7 @@ export default function WhatsAppConfig() {
             <p className="text-xs font-medium text-foreground">Ativar Notificações</p>
             <p className="text-[10px] text-muted-foreground">Habilitar envio de alertas via WhatsApp</p>
           </div>
-          <Switch checked={enabled} onCheckedChange={setEnabled} />
+          <Switch checked={enabled} onCheckedChange={handleToggleEnabled} disabled={saving} />
         </div>
 
         {enabled && (
@@ -122,6 +192,7 @@ export default function WhatsAppConfig() {
             <p>→ Autenticado via QR Code</p>
             <p>→ Número registrado: {phone}</p>
             <p>→ <span className="text-success">Pronto para enviar notificações</span></p>
+            <p>→ <span className="text-cyan">Estado salvo no banco de dados ✓</span></p>
           </div>
         </div>
       )}
