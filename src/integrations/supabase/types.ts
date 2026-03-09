@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      honey_tokens: {
+        Row: {
+          access_count: number
+          access_metadata: Json | null
+          accessed_at: string | null
+          created_at: string
+          id: string
+          label: string
+          status: string
+          token: string
+          user_id: string
+        }
+        Insert: {
+          access_count?: number
+          access_metadata?: Json | null
+          accessed_at?: string | null
+          created_at?: string
+          id?: string
+          label: string
+          status?: string
+          token: string
+          user_id: string
+        }
+        Update: {
+          access_count?: number
+          access_metadata?: Json | null
+          accessed_at?: string | null
+          created_at?: string
+          id?: string
+          label?: string
+          status?: string
+          token?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       leaked_data: {
         Row: {
           breach_date: string | null
@@ -46,6 +82,45 @@ export type Database = {
           password_hash?: string | null
           source?: string | null
           status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      phishing_campaigns: {
+        Row: {
+          campaign_name: string
+          completed_at: string | null
+          created_at: string
+          email_template: string
+          id: string
+          scheduled_at: string | null
+          stats: Json | null
+          status: string
+          target_emails: string[]
+          user_id: string
+        }
+        Insert: {
+          campaign_name: string
+          completed_at?: string | null
+          created_at?: string
+          email_template: string
+          id?: string
+          scheduled_at?: string | null
+          stats?: Json | null
+          status?: string
+          target_emails: string[]
+          user_id: string
+        }
+        Update: {
+          campaign_name?: string
+          completed_at?: string | null
+          created_at?: string
+          email_template?: string
+          id?: string
+          scheduled_at?: string | null
+          stats?: Json | null
+          status?: string
+          target_emails?: string[]
           user_id?: string
         }
         Relationships: []
