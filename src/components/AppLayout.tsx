@@ -71,7 +71,7 @@ const domoGroups = [
     bgClass: "bg-destructive/5",
     borderClass: "border-l-destructive",
     items: [
-      { to: "/domo3-setup", icon: Terminal, label: "Setup Arsenal" },
+      
       { to: "/pentest-arsenal", icon: Crosshair, label: "Pentest Arsenal" },
       { to: "/dark-web-monitor", icon: Ghost, label: "Dark Web" },
       { to: "/threat-intel", icon: Brain, label: "Threat Intel" },
@@ -85,7 +85,8 @@ const domoGroups = [
 const systemItems = [
   { to: "/whatsapp", icon: MessageSquare, label: "WhatsApp" },
   { to: "/pricing", icon: CreditCard, label: "Planos" },
-  { to: "/admin", icon: Users, label: "Admin" },
+  { to: "/admin", icon: Users, label: "Admin", adminOnly: true },
+  { to: "/domo3-setup", icon: Terminal, label: "Setup Arsenal", adminOnly: true },
   { to: "/academy", icon: GraduationCap, label: "Academy" },
   { to: "/support", icon: HeadphonesIcon, label: "Suporte" },
   { to: "/about", icon: Info, label: "Sobre" },
@@ -99,7 +100,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     "DOMO 3": true,
   });
   const location = useLocation();
-  const { user, signOut } = useAuth();
+  const { user, signOut, isAdmin } = useAuth();
 
   const displayName = user?.user_metadata?.full_name || "Usuário";
 
@@ -200,7 +201,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           )}
           {collapsed && <div className="mx-auto my-1 h-px w-6 bg-border" />}
           <div className="space-y-0.5 mt-1">
-            {systemItems.map((item) => renderNavItem(item))}
+            {systemItems
+              .filter((item) => !item.adminOnly || isAdmin)
+              .map((item) => renderNavItem(item))}
           </div>
         </nav>
 

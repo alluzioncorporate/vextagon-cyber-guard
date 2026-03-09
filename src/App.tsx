@@ -42,6 +42,14 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { user, loading, isAdmin } = useAuth();
+  if (loading) return <div className="flex min-h-screen items-center justify-center bg-background"><p className="text-muted-foreground">Carregando...</p></div>;
+  if (!user) return <Navigate to="/auth" replace />;
+  if (!isAdmin) return <Navigate to="/" replace />;
+  return <>{children}</>;
+}
+
 function AuthRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   if (loading) return null;
@@ -66,7 +74,7 @@ const AppRoutes = () => (
     <Route path="/dashboard/servers" element={<ProtectedRoute><AppLayout><ServerMonitoring /></AppLayout></ProtectedRoute>} />
     <Route path="/social-engineering" element={<ProtectedRoute><AppLayout><SocialEngineering /></AppLayout></ProtectedRoute>} />
     {/* DOMO 3 - Elite */}
-    <Route path="/domo3-setup" element={<ProtectedRoute><AppLayout><Domo3Setup /></AppLayout></ProtectedRoute>} />
+    <Route path="/domo3-setup" element={<AdminRoute><AppLayout><Domo3Setup /></AppLayout></AdminRoute>} />
     <Route path="/pentest-arsenal" element={<ProtectedRoute><AppLayout><PentestArsenal /></AppLayout></ProtectedRoute>} />
     <Route path="/dark-web-monitor" element={<ProtectedRoute><AppLayout><DarkWebMonitor /></AppLayout></ProtectedRoute>} />
     <Route path="/threat-intel" element={<ProtectedRoute><AppLayout><ThreatIntel /></AppLayout></ProtectedRoute>} />
