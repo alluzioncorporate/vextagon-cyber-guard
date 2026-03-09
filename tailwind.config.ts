@@ -65,6 +65,7 @@ export default {
         gold: "hsl(var(--gold))",
         success: "hsl(var(--success))",
         warning: "hsl(var(--warning))",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
