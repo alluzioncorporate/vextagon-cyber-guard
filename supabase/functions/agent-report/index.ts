@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { agent_token, hostname, ip_address, os_info, cpu_usage, ram_usage, disk_usage, open_ports, security_updates } = body;
+    const { agent_token, hostname, ip_address, os_info, cpu_usage, ram_usage, disk_usage, open_ports, security_updates, extra_data } = body;
 
     if (!agent_token) {
       return new Response(JSON.stringify({ error: "Missing agent_token" }), {
@@ -34,7 +34,6 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Validate token exists
     const { data: server, error: findError } = await supabaseAdmin
       .from("server_monitoring")
       .select("id, user_id")
@@ -48,7 +47,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Update server data
     const updateData: Record<string, unknown> = {
       last_seen: new Date().toISOString(),
       updated_at: new Date().toISOString(),
@@ -61,6 +59,7 @@ Deno.serve(async (req) => {
     if (disk_usage !== undefined) updateData.disk_usage = disk_usage;
     if (open_ports !== undefined) updateData.open_ports = open_ports;
     if (security_updates !== undefined) updateData.security_updates = security_updates;
+    if (extra_data !== undefined) updateData.extra_data = extra_data;
 
     const { error: updateError } = await supabaseAdmin
       .from("server_monitoring")
@@ -74,7 +73,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Create alerts for critical resource usage
+    // Alerts for critical usage
     const alerts = [];
     if (cpu_usage && cpu_usage > 90) {
       alerts.push({ user_id: server.user_id, alert_type: "server_cpu", severity: "high", title: `CPU crítico em ${hostname || "servidor"}`, description: `Uso de CPU em ${cpu_usage}%`, domain: ip_address || null });
