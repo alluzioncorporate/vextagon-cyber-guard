@@ -80,14 +80,8 @@ export default function AdminPanel() {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const [baileys, vps, vpsKey] = await Promise.all([
-          invokeAdmin("get_setting", { key: "baileys_url" }),
-          invokeAdmin("get_setting", { key: "vps_url" }),
-          invokeAdmin("get_setting", { key: "vps_api_key" }),
-        ]);
+        const baileys = await invokeAdmin("get_setting", { key: "baileys_url" });
         setBaileysUrl(baileys.value || "");
-        setVpsUrl(vps.value || "");
-        setVpsApiKey(vpsKey.value || "");
       } catch {}
     };
     if (user) loadSettings();
