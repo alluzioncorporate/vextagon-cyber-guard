@@ -39,8 +39,6 @@ export default function AdminPanel() {
   const queryClient = useQueryClient();
   const [deleteConfirm, setDeleteConfirm] = useState<AdminUser | null>(null);
   const [baileysUrl, setBaileysUrl] = useState("");
-  const [vpsUrl, setVpsUrl] = useState("");
-  const [vpsApiKey, setVpsApiKey] = useState("");
   const [savingUrl, setSavingUrl] = useState(false);
 
   const invokeAdmin = async (action: string, body?: Record<string, unknown>, method: string = "POST") => {
@@ -82,14 +80,8 @@ export default function AdminPanel() {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const [baileys, vps, vpsKey] = await Promise.all([
-          invokeAdmin("get_setting", { key: "baileys_url" }),
-          invokeAdmin("get_setting", { key: "vps_url" }),
-          invokeAdmin("get_setting", { key: "vps_api_key" }),
-        ]);
+        const baileys = await invokeAdmin("get_setting", { key: "baileys_url" });
         setBaileysUrl(baileys.value || "");
-        setVpsUrl(vps.value || "");
-        setVpsApiKey(vpsKey.value || "");
       } catch {}
     };
     if (user) loadSettings();
@@ -180,44 +172,6 @@ export default function AdminPanel() {
         ))}
       </div>
 
-      {/* VPS Kali Linux Config */}
-      <div className="v-card p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <ServerIcon className="h-3.5 w-3.5 text-primary" />
-          <p className="v-section-title">VPS Kali Linux (Ferramentas Reais)</p>
-        </div>
-        <p className="text-[11px] text-muted-foreground mb-3">
-          URL da API REST na sua VPS com Kali Linux. As ferramentas (nmap, nikto, sqlmap, hydra, etc.) serão executadas remotamente.
-        </p>
-        <div className="space-y-2">
-          <div className="flex gap-2">
-            <Input
-              value={vpsUrl}
-              onChange={(e) => setVpsUrl(e.target.value)}
-              placeholder="https://kali.seudominio.com"
-              className="bg-secondary/50 font-mono text-xs border-border flex-1"
-            />
-            <Button onClick={() => handleSaveSetting("vps_url", vpsUrl, "URL da VPS")} size="sm" disabled={savingUrl} className="text-xs">
-              {savingUrl ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5 mr-1" />}
-              Salvar
-            </Button>
-          </div>
-          <div className="flex gap-2">
-            <Input
-              value={vpsApiKey}
-              onChange={(e) => setVpsApiKey(e.target.value)}
-              placeholder="API Key da VPS (opcional)"
-              type="password"
-              className="bg-secondary/50 font-mono text-xs border-border flex-1"
-            />
-            <Button onClick={() => handleSaveSetting("vps_api_key", vpsApiKey, "API Key da VPS")} size="sm" disabled={savingUrl} className="text-xs">
-              {savingUrl ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5 mr-1" />}
-              Salvar
-            </Button>
-          </div>
-        </div>
-      </div>
-
       {/* Baileys Config */}
       <div className="v-card p-4">
         <div className="flex items-center gap-2 mb-3">
@@ -281,26 +235,32 @@ export default function AdminPanel() {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <button className="flex items-center gap-1 rounded px-2 py-1 transition-colors hover:bg-secondary/50">
-                          {u.subscription_tier === "premium" ? (
-                            <span className="font-mono text-[10px] font-medium text-gold uppercase">Premium</span>
-                          ) : (
-                            <span className="font-mono text-[10px] text-muted-foreground uppercase">Free</span>
-                          )}
+                          <span className={`font-mono text-[10px] font-medium uppercase ${
+                            u.subscription_tier === "domo3" ? "text-destructive" :
+                            u.subscription_tier === "domo2" ? "text-gold" :
+                            u.subscription_tier === "domo1" ? "text-cyan" :
+                            "text-muted-foreground"
+                          }`}>
+                            {u.subscription_tier === "domo3" ? "DOMO 3" :
+                             u.subscription_tier === "domo2" ? "DOMO 2" :
+                             u.subscription_tier === "domo1" ? "DOMO 1" :
+                             u.subscription_tier || "Free"}
+                          </span>
                           <ChevronDown className="h-3 w-3 text-muted-foreground" />
                         </button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="start" className="min-w-[120px]">
-                        <DropdownMenuItem
-                          onClick={() => updatePlan.mutate({ userId: u.id, plan: "free" })}
-                          className="text-xs"
-                        >
+                      <DropdownMenuContent align="start" className="min-w-[140px]">
+                        <DropdownMenuItem onClick={() => updatePlan.mutate({ userId: u.id, plan: "free" })} className="text-xs">
                           <Globe className="h-3 w-3 mr-1.5 text-muted-foreground" /> Free
                         </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => updatePlan.mutate({ userId: u.id, plan: "premium" })}
-                          className="text-xs"
-                        >
-                          <Crown className="h-3 w-3 mr-1.5 text-gold" /> Premium
+                        <DropdownMenuItem onClick={() => updatePlan.mutate({ userId: u.id, plan: "domo1" })} className="text-xs">
+                          <ShieldCheck className="h-3 w-3 mr-1.5 text-cyan" /> DOMO 1
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => updatePlan.mutate({ userId: u.id, plan: "domo2" })} className="text-xs">
+                          <ServerIcon className="h-3 w-3 mr-1.5 text-gold" /> DOMO 2
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => updatePlan.mutate({ userId: u.id, plan: "domo3" })} className="text-xs">
+                          <Crown className="h-3 w-3 mr-1.5 text-destructive" /> DOMO 3
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

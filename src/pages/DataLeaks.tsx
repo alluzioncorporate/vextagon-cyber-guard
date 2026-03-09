@@ -1,78 +1,105 @@
-import { AlertTriangle, ShieldCheck, Eye, EyeOff } from "lucide-react";
-import { mockLeakedCredentials } from "@/data/mockData";
+import { AlertTriangle, ShieldCheck, Search, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { useVpsTool } from "@/hooks/useVpsTool";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function DataLeaks() {
-  const [showPasswords, setShowPasswords] = useState(false);
-  const leaked = mockLeakedCredentials.filter((c) => c.status === "leaked").length;
-  const safe = mockLeakedCredentials.filter((c) => c.status === "protected").length;
+  const [domain, setDomain] = useState("");
+  const [results, setResults] = useState<any>(null);
+  const { runTool, loading } = useVpsTool();
+
+  const handleScan = async () => {
+    if (!domain.trim()) return;
+    const data = await runTool("theharvester", domain.trim());
+    if (data?.output) setResults(data.output);
+  };
+
+  const emails = results?.emails || [];
+  const hosts = results?.hosts || [];
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-lg font-semibold tracking-wide text-foreground">Data Leak Monitor</h1>
-        <p className="text-xs text-muted-foreground mt-0.5">Monitoramento de credenciais vazadas</p>
+        <h1 className="text-lg font-semibold tracking-wide text-foreground">OSINT & Data Leaks</h1>
+        <p className="text-xs text-muted-foreground mt-0.5">Descoberta de emails, hosts e informações expostas via theHarvester</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
-        {[
-          { label: "Total Monitorado", value: mockLeakedCredentials.length },
-          { label: "Vazados", value: leaked, danger: true },
-          { label: "Protegidos", value: safe, success: true },
-        ].map((s) => (
-          <div key={s.label} className="v-card p-4">
-            <span className="v-label">{s.label}</span>
-            <p className={`mt-2 v-stat ${s.danger ? "severity-critical" : s.success ? "text-success" : "text-foreground"}`}>{s.value}</p>
+      <div className="v-card p-4">
+        <div className="flex gap-2">
+          <Input
+            value={domain}
+            onChange={(e) => setDomain(e.target.value)}
+            placeholder="dominio.com"
+            className="bg-secondary/50 font-mono text-xs border-border flex-1"
+            onKeyDown={(e) => e.key === "Enter" && handleScan()}
+          />
+          <Button onClick={handleScan} disabled={loading || !domain.trim()} size="sm" className="text-xs">
+            {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-1" /> : <Search className="h-3.5 w-3.5 mr-1" />}
+            Buscar OSINT
+          </Button>
+        </div>
+      </div>
+
+      {results && (
+        <>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="v-card p-4">
+              <span className="v-label">Emails encontrados</span>
+              <p className="mt-2 v-stat text-foreground">{emails.length}</p>
+            </div>
+            <div className="v-card p-4">
+              <span className="v-label">Hosts encontrados</span>
+              <p className="mt-2 v-stat text-foreground">{hosts.length}</p>
+            </div>
           </div>
-        ))}
-      </div>
 
-      <div className="v-card overflow-hidden">
-        <div className="flex items-center justify-between border-b border-border px-4 py-3">
-          <p className="v-section-title">Credenciais</p>
-          <button
-            onClick={() => setShowPasswords(!showPasswords)}
-            className="flex items-center gap-1.5 rounded px-2 py-1 text-xs text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
-          >
-            {showPasswords ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
-            {showPasswords ? "Ocultar" : "Mostrar Hashes"}
-          </button>
+          {emails.length > 0 && (
+            <div className="v-card overflow-hidden">
+              <div className="border-b border-border px-4 py-3">
+                <p className="v-section-title">Emails Expostos</p>
+              </div>
+              <div className="divide-y divide-border/40">
+                {emails.map((email: string, i: number) => (
+                  <div key={i} className="flex items-center gap-2 px-4 py-2.5">
+                    <AlertTriangle className="h-3 w-3 text-warning shrink-0" />
+                    <span className="font-mono text-xs text-foreground">{email}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {hosts.length > 0 && (
+            <div className="v-card overflow-hidden">
+              <div className="border-b border-border px-4 py-3">
+                <p className="v-section-title">Hosts Descobertos</p>
+              </div>
+              <div className="divide-y divide-border/40">
+                {hosts.map((host: string, i: number) => (
+                  <div key={i} className="flex items-center gap-2 px-4 py-2.5">
+                    <ShieldCheck className="h-3 w-3 text-muted-foreground shrink-0" />
+                    <span className="font-mono text-xs text-foreground">{host}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {emails.length === 0 && hosts.length === 0 && (
+            <div className="v-card p-8 text-center">
+              <p className="text-xs text-muted-foreground">Nenhum resultado encontrado para este domínio.</p>
+            </div>
+          )}
+        </>
+      )}
+
+      {!results && !loading && (
+        <div className="v-card p-8 text-center">
+          <Search className="h-6 w-6 text-muted-foreground mx-auto mb-2" />
+          <p className="text-xs text-muted-foreground">Digite um domínio para buscar informações OSINT via theHarvester</p>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="px-4 py-2.5 text-left v-label">Status</th>
-                <th className="px-4 py-2.5 text-left v-label">E-mail</th>
-                <th className="px-4 py-2.5 text-left v-label">Fonte</th>
-                <th className="px-4 py-2.5 text-left v-label">Data</th>
-                {showPasswords && <th className="px-4 py-2.5 text-left v-label">Hash</th>}
-              </tr>
-            </thead>
-            <tbody>
-              {mockLeakedCredentials.map((cred) => (
-                <tr key={cred.id} className="border-b border-border/40 hover:bg-secondary/30 transition-colors">
-                  <td className="px-4 py-2.5">
-                    {cred.status === "leaked" ? (
-                      <span className="inline-flex items-center gap-1 font-mono text-[10px] font-medium severity-critical">
-                        <AlertTriangle className="h-3 w-3" /> VAZADO
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 font-mono text-[10px] font-medium text-success">
-                        <ShieldCheck className="h-3 w-3" /> OK
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-2.5 font-mono text-foreground">{cred.email}</td>
-                  <td className="px-4 py-2.5 font-mono text-muted-foreground">{cred.source}</td>
-                  <td className="px-4 py-2.5 font-mono text-muted-foreground">{cred.date}</td>
-                  {showPasswords && <td className="px-4 py-2.5 font-mono text-muted-foreground">{cred.passwordHash}</td>}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
