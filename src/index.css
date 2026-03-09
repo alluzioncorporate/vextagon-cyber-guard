@@ -105,6 +105,10 @@
     color: hsl(var(--neon-cyan));
   }
 
+  .text-indigo {
+    color: hsl(var(--indigo));
+  }
+
   .text-gold {
     color: hsl(var(--gold));
   }
