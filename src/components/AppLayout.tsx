@@ -201,7 +201,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           )}
           {collapsed && <div className="mx-auto my-1 h-px w-6 bg-border" />}
           <div className="space-y-0.5 mt-1">
-            {systemItems.map((item) => renderNavItem(item))}
+            {systemItems
+              .filter((item) => !item.adminOnly || isAdmin)
+              .map((item) => renderNavItem(item))}
           </div>
         </nav>
 
