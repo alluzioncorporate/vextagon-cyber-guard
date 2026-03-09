@@ -192,6 +192,23 @@ export default function ServerMonitoring() {
     setSelectedModules(prev => prev.includes(id) ? prev.filter(m => m !== id) : [...prev, id]);
   };
 
+  const deleteServer = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("server_monitoring").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["servers"] });
+      setSelectedServer(null);
+      toast({ title: "Servidor removido" });
+    },
+    onError: (err: Error) => {
+      toast({ title: "Erro", description: err.message, variant: "destructive" });
+    },
+  });
+
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+
   // ── Render ──
 
   return (
