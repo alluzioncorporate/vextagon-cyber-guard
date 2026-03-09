@@ -136,6 +136,7 @@ export default function EasmScanner() {
         <div className="v-card flex flex-col items-center py-12">
           <Radar className="h-10 w-10 text-primary animate-spin" />
           <p className="mt-3 font-mono text-xs text-muted-foreground">Analisando {domain}...</p>
+          <p className="mt-1.5 font-mono text-[10px] text-muted-foreground/50">DNS · SSL · Headers · Portas (~10–15s)</p>
         </div>
       )}
 
