@@ -235,26 +235,32 @@ export default function AdminPanel() {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <button className="flex items-center gap-1 rounded px-2 py-1 transition-colors hover:bg-secondary/50">
-                          {u.subscription_tier === "premium" ? (
-                            <span className="font-mono text-[10px] font-medium text-gold uppercase">Premium</span>
-                          ) : (
-                            <span className="font-mono text-[10px] text-muted-foreground uppercase">Free</span>
-                          )}
+                          <span className={`font-mono text-[10px] font-medium uppercase ${
+                            u.subscription_tier === "domo3" ? "text-destructive" :
+                            u.subscription_tier === "domo2" ? "text-gold" :
+                            u.subscription_tier === "domo1" ? "text-cyan" :
+                            "text-muted-foreground"
+                          }`}>
+                            {u.subscription_tier === "domo3" ? "DOMO 3" :
+                             u.subscription_tier === "domo2" ? "DOMO 2" :
+                             u.subscription_tier === "domo1" ? "DOMO 1" :
+                             u.subscription_tier || "Free"}
+                          </span>
                           <ChevronDown className="h-3 w-3 text-muted-foreground" />
                         </button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="start" className="min-w-[120px]">
-                        <DropdownMenuItem
-                          onClick={() => updatePlan.mutate({ userId: u.id, plan: "free" })}
-                          className="text-xs"
-                        >
+                      <DropdownMenuContent align="start" className="min-w-[140px]">
+                        <DropdownMenuItem onClick={() => updatePlan.mutate({ userId: u.id, plan: "free" })} className="text-xs">
                           <Globe className="h-3 w-3 mr-1.5 text-muted-foreground" /> Free
                         </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => updatePlan.mutate({ userId: u.id, plan: "premium" })}
-                          className="text-xs"
-                        >
-                          <Crown className="h-3 w-3 mr-1.5 text-gold" /> Premium
+                        <DropdownMenuItem onClick={() => updatePlan.mutate({ userId: u.id, plan: "domo1" })} className="text-xs">
+                          <ShieldCheck className="h-3 w-3 mr-1.5 text-cyan" /> DOMO 1
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => updatePlan.mutate({ userId: u.id, plan: "domo2" })} className="text-xs">
+                          <ServerIcon className="h-3 w-3 mr-1.5 text-gold" /> DOMO 2
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => updatePlan.mutate({ userId: u.id, plan: "domo3" })} className="text-xs">
+                          <Crown className="h-3 w-3 mr-1.5 text-destructive" /> DOMO 3
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
