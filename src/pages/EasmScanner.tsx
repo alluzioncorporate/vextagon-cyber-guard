@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Search, Globe, Lock, Server, Bug, Cpu, Radar, AlertCircle, ShieldAlert, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { generateScanResults, validateDomain, type ScanResult } from "@/lib/scanEngine";
+import { validateDomain, type ScanResult } from "@/lib/scanEngine";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { supabase } from "@/integrations/supabase/client";
 
 const severityClass: Record<string, string> = {
   critical: "severity-critical",
@@ -17,8 +18,9 @@ export default function EasmScanner() {
   const [scanning, setScanning] = useState(false);
   const [results, setResults] = useState<ScanResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [shodanEnabled, setShodanEnabled] = useState(false);
 
-  const handleScan = () => {
+  const handleScan = async () => {
     const validation = validateDomain(domain);
     if (!validation.valid) {
       setError(validation.reason || "Domínio inválido");
@@ -27,12 +29,23 @@ export default function EasmScanner() {
     setError(null);
     setScanning(true);
     setResults(null);
+    setShodanEnabled(false);
 
-    // Simulate network delay
-    setTimeout(() => {
+    try {
+      const { data, error: fnError } = await supabase.functions.invoke('easm-scan', {
+        body: { domain: domain.trim().toLowerCase() }
+      });
+      
+      if (fnError) throw new Error(fnError.message);
+      if (data?.error) throw new Error(data.error);
+      
+      setShodanEnabled(data.shodanEnabled || false);
+      setResults(data as ScanResult);
+    } catch (err: any) {
+      setError(err.message || "Erro ao realizar scan. Tente novamente.");
+    } finally {
       setScanning(false);
-      setResults(generateScanResults(domain.trim().toLowerCase()));
-    }, 2500);
+    }
   };
 
   const scoreColor = (s: number) => s >= 80 ? "text-success" : s >= 60 ? "text-warning" : "severity-critical";
@@ -123,6 +136,7 @@ export default function EasmScanner() {
         <div className="v-card flex flex-col items-center py-12">
           <Radar className="h-10 w-10 text-primary animate-spin" />
           <p className="mt-3 font-mono text-xs text-muted-foreground">Analisando {domain}...</p>
+          <p className="mt-1.5 font-mono text-[10px] text-muted-foreground/50">DNS · SSL · Headers · Portas (~10–15s)</p>
         </div>
       )}
 
@@ -220,6 +234,9 @@ export default function EasmScanner() {
               <div className="flex items-center gap-2 mb-3">
                 <Cpu className="h-3.5 w-3.5 text-primary" />
                 <p className="v-section-title">Shodan Intelligence</p>
+                {!shodanEnabled && (
+                  <span className="ml-auto font-mono text-[9px] px-1.5 py-0.5 rounded bg-secondary text-muted-foreground">opcional</span>
+                )}
               </div>
               <div className="space-y-1.5">
                 {[
@@ -273,13 +290,15 @@ export default function EasmScanner() {
               <ShieldAlert className="h-4 w-4 text-primary" />
               <h2 className="v-section-title">Recomendações de Segurança</h2>
             </div>
-            <Alert className="mb-3 bg-warning/10 border-warning/20">
-              <AlertCircle className="h-3.5 w-3.5 text-warning" />
-              <AlertDescription className="text-[11px] text-muted-foreground ml-1">
-                <strong className="text-warning">Nota:</strong> Esta ferramenta usa simulação determinística para demonstração. 
-                Para análise real, conecte APIs de DNS, SSL e Shodan via edge functions.
-              </AlertDescription>
-            </Alert>
+            {!shodanEnabled && (
+              <Alert className="mb-3 bg-secondary/60 border-border">
+                <Cpu className="h-3.5 w-3.5 text-muted-foreground" />
+                <AlertDescription className="text-[11px] text-muted-foreground ml-1">
+                  <strong className="text-foreground">Shodan não ativado:</strong> Inteligência de IP, OS e CVEs indisponível. 
+                  Adicione <code className="text-cyan font-mono text-[10px]">SHODAN_API_KEY</code> em Cloud Secrets para ativar.
+                </AlertDescription>
+              </Alert>
+            )}
             <div className="space-y-2">
               {generateRecommendations(results).map((rec, idx) => (
                 <div key={idx} className={`rounded border-l-4 bg-secondary/40 p-3 ${
