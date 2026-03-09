@@ -29,6 +29,7 @@ import ThreatIntel from "@/pages/ThreatIntel";
 import Forensics from "@/pages/Forensics";
 import Playbooks from "@/pages/Playbooks";
 import Academy from "@/pages/Academy";
+import SocialEngineering from "@/pages/SocialEngineering";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
