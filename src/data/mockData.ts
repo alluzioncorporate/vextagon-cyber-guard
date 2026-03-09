@@ -41,6 +41,8 @@ export const domoTiers = {
       "Logs de autenticação (SSH, sudo)",
       "Atualizações de segurança pendentes",
       "Alertas WhatsApp em tempo real",
+      "🚨 Central de Alertas em Tempo Real",
+      "Filtro de alertas enviados ao WhatsApp",
       "Phishing Simulator (campanhas internas)",
       "🔐 Gerenciador de Senhas Ultra-Avançado",
       "Gerador de senhas criptográficas",
