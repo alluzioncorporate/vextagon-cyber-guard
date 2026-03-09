@@ -237,7 +237,7 @@ export default function PasswordManager() {
                 value={passwordLength}
                 onValueChange={setPasswordLength}
                 min={8}
-                max={64}
+                max={256}
                 step={1}
                 className="w-full"
               />
