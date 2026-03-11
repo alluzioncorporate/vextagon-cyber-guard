@@ -22,6 +22,44 @@ Deno.serve(async (req) => {
     const body = await req.json();
     const { agent_token, hostname, ip_address, os_info, cpu_usage, ram_usage, disk_usage, open_ports, security_updates, extra_data } = body;
 
+    // Input validation
+    if (typeof agent_token !== 'string' || agent_token.length > 500) {
+      return new Response(JSON.stringify({ error: "Invalid request" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (hostname !== undefined && (typeof hostname !== 'string' || hostname.length > 255)) {
+      return new Response(JSON.stringify({ error: "Invalid hostname" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (ip_address !== undefined && (typeof ip_address !== 'string' || ip_address.length > 45)) {
+      return new Response(JSON.stringify({ error: "Invalid ip_address" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (cpu_usage !== undefined && (typeof cpu_usage !== 'number' || cpu_usage < 0 || cpu_usage > 100)) {
+      return new Response(JSON.stringify({ error: "Invalid cpu_usage" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (ram_usage !== undefined && (typeof ram_usage !== 'number' || ram_usage < 0 || ram_usage > 100)) {
+      return new Response(JSON.stringify({ error: "Invalid ram_usage" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (disk_usage !== undefined && (typeof disk_usage !== 'number' || disk_usage < 0 || disk_usage > 100)) {
+      return new Response(JSON.stringify({ error: "Invalid disk_usage" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     if (!agent_token) {
       return new Response(JSON.stringify({ error: "Missing agent_token" }), {
         status: 400,
@@ -93,8 +131,8 @@ Deno.serve(async (req) => {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
-  } catch (e) {
-    return new Response(JSON.stringify({ error: "Internal error" }), {
+  } catch {
+    return new Response(JSON.stringify({ error: "Report processing failed" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
