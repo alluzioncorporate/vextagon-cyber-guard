@@ -101,6 +101,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
+          <RecoveryEmailPrompt />
           <AppRoutes />
         </AuthProvider>
       </BrowserRouter>
