@@ -8,74 +8,81 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 
-function formatCPF(value: string) {
-  const digits = value.replace(/\D/g, "").slice(0, 11);
-  if (digits.length <= 3) return digits;
-  if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`;
-  if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`;
-  return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`;
-}
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function cpfToEmail(cpf: string) {
-  return `${cpf.replace(/\D/g, "")}@vextagon.local`;
-}
+type Mode = "login" | "signup" | "forgot";
 
 export default function Auth() {
-  const [isLogin, setIsLogin] = useState(true);
-  const [cpf, setCpf] = useState("");
+  const [mode, setMode] = useState<Mode>("login");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const rawCpf = cpf.replace(/\D/g, "");
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (rawCpf.length !== 11) {
-      toast({ title: "CPF inválido", description: "Informe um CPF com 11 dígitos.", variant: "destructive" });
-      return;
-    }
-    if (password.length < 12) {
-      toast({ title: "Senha fraca", description: "A senha deve ter no mínimo 12 caracteres.", variant: "destructive" });
+
+    if (!EMAIL_REGEX.test(email)) {
+      toast({ title: "E-mail inválido", description: "Informe um e-mail válido.", variant: "destructive" });
       return;
     }
 
     setLoading(true);
-    const email = cpfToEmail(rawCpf);
-
     try {
-      if (isLogin) {
+      if (mode === "forgot") {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (error) throw error;
+        toast({ title: "E-mail enviado", description: "Verifique sua caixa de entrada para redefinir a senha." });
+        setMode("login");
+        return;
+      }
+
+      if (password.length < 12) {
+        toast({ title: "Senha fraca", description: "A senha deve ter no mínimo 12 caracteres.", variant: "destructive" });
+        setLoading(false);
+        return;
+      }
+
+      if (mode === "login") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         navigate("/");
       } else {
-        const { data, error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { full_name: fullName } },
+          options: {
+            emailRedirectTo: `${window.location.origin}/`,
+            data: { full_name: fullName },
+          },
         });
         if (error) throw error;
-
-        // Update profile with CPF
-        if (data.user) {
-          await supabase.from("profiles").update({ cpf: rawCpf, full_name: fullName }).eq("id", data.user.id);
-        }
-
-        toast({ title: "Conta criada!", description: "Você já está logado." });
-        navigate("/");
+        toast({ title: "Conta criada!", description: "Verifique seu e-mail para confirmar o cadastro." });
+        setMode("login");
       }
     } catch (err: any) {
+      const msg = err?.message || "";
       toast({
         title: "Erro",
-        description: err.message === "Invalid login credentials" ? "CPF ou senha incorretos." : err.message,
+        description:
+          msg === "Invalid login credentials"
+            ? "E-mail ou senha incorretos."
+            : msg === "User already registered"
+            ? "Este e-mail já está cadastrado."
+            : msg,
         variant: "destructive",
       });
     } finally {
       setLoading(false);
     }
   };
+
+  const title =
+    mode === "login" ? "Acesse sua conta" : mode === "signup" ? "Crie sua conta" : "Recuperar senha";
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
@@ -85,11 +92,11 @@ export default function Auth() {
             <Shield className="h-7 w-7 text-primary" />
           </div>
           <CardTitle className="text-2xl text-foreground">VEXTAGON</CardTitle>
-          <CardDescription>{isLogin ? "Acesse sua conta" : "Crie sua conta"}</CardDescription>
+          <CardDescription>{title}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {!isLogin && (
+            {mode === "signup" && (
               <div className="space-y-2">
                 <Label htmlFor="fullName">Nome completo</Label>
                 <Input
@@ -97,44 +104,84 @@ export default function Auth() {
                   placeholder="Seu nome"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  required={!isLogin}
+                  required
                 />
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="cpf">CPF</Label>
+              <Label htmlFor="email">E-mail</Label>
               <Input
-                id="cpf"
-                placeholder="000.000.000-00"
-                value={cpf}
-                onChange={(e) => setCpf(formatCPF(e.target.value))}
-                maxLength={14}
-                inputMode="numeric"
+                id="email"
+                type="email"
+                placeholder="seuemail@exemplo.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+                required
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Mínimo 12 caracteres"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                minLength={6}
-              />
-            </div>
+            {mode !== "forgot" && (
+              <div className="space-y-2">
+                <Label htmlFor="password">Senha</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Mínimo 12 caracteres"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  minLength={12}
+                  autoComplete={mode === "login" ? "current-password" : "new-password"}
+                  required
+                />
+              </div>
+            )}
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Aguarde..." : isLogin ? "Entrar" : "Criar conta"}
+              {loading
+                ? "Aguarde..."
+                : mode === "login"
+                ? "Entrar"
+                : mode === "signup"
+                ? "Criar conta"
+                : "Enviar link de recuperação"}
             </Button>
           </form>
-          <div className="mt-4 text-center">
-            <button
-              type="button"
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-muted-foreground hover:text-primary transition-colors"
-            >
-              {isLogin ? "Não tem conta? Cadastre-se" : "Já tem conta? Faça login"}
-            </button>
+          <div className="mt-4 flex flex-col items-center gap-2 text-sm">
+            {mode === "login" && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setMode("forgot")}
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Esqueci minha senha
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode("signup")}
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Não tem conta? Cadastre-se
+                </button>
+              </>
+            )}
+            {mode === "signup" && (
+              <button
+                type="button"
+                onClick={() => setMode("login")}
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                Já tem conta? Faça login
+              </button>
+            )}
+            {mode === "forgot" && (
+              <button
+                type="button"
+                onClick={() => setMode("login")}
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                Voltar ao login
+              </button>
+            )}
           </div>
         </CardContent>
       </Card>

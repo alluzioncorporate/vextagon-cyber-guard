@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import AppLayout from "@/components/AppLayout";
 import Auth from "@/pages/Auth";
+import ResetPassword from "@/pages/ResetPassword";
 import WafDashboard from "@/pages/WafDashboard";
 import EasmScanner from "@/pages/EasmScanner";
 import DataLeaks from "@/pages/DataLeaks";
@@ -62,6 +63,7 @@ function AuthRoute({ children }: { children: React.ReactNode }) {
 const AppRoutes = () => (
   <Routes>
     <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
+    <Route path="/reset-password" element={<ResetPassword />} />
     <Route path="/" element={<ProtectedRoute><AppLayout><WafDashboard /></AppLayout></ProtectedRoute>} />
     <Route path="/easm" element={<ProtectedRoute><AppLayout><EasmScanner /></AppLayout></ProtectedRoute>} />
     <Route path="/data-leaks" element={<ProtectedRoute><AppLayout><DataLeaks /></AppLayout></ProtectedRoute>} />
