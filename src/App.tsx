@@ -34,7 +34,7 @@ import SocialEngineering from "@/pages/SocialEngineering";
 import Domo3Setup from "@/pages/Domo3Setup";
 import PasswordManager from "@/pages/PasswordManager";
 import NotFound from "@/pages/NotFound";
-import RecoveryEmailPrompt from "@/components/RecoveryEmailPrompt";
+
 
 const queryClient = new QueryClient();
 
@@ -103,7 +103,6 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <RecoveryEmailPrompt />
           <AppRoutes />
         </AuthProvider>
       </BrowserRouter>
