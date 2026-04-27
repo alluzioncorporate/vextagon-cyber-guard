@@ -6,9 +6,9 @@
 
 @layer base {
   :root {
-    /* Frutiger Aero — Deep Obsidian → Midnight Blue base */
-    --background: 222 55% 6%;
-    --foreground: 210 30% 96%;
+    /* Alluzion Frutiger Aero — Deep Obsidian (#0A0E17 → #161B22) */
+    --background: 220 40% 5%;
+    --foreground: 210 25% 94%;
 
     --card: 220 45% 9%;
     --card-foreground: 210 30% 96%;
@@ -52,18 +52,18 @@
     --success: 152 70% 50%;
     --warning: 38 95% 58%;
 
-    /* Frutiger Aero gradients & effects */
-    --gradient-app: radial-gradient(ellipse at 10% -10%, hsl(220 80% 18% / 0.55), transparent 55%),
-                    radial-gradient(ellipse at 90% 10%, hsl(188 90% 35% / 0.30), transparent 50%),
-                    radial-gradient(ellipse at 50% 110%, hsl(230 70% 25% / 0.45), transparent 60%),
-                    linear-gradient(180deg, hsl(222 60% 5%), hsl(225 55% 8%));
-    --gradient-glass: linear-gradient(135deg, hsl(210 60% 90% / 0.08), hsl(210 60% 90% / 0.02) 50%, hsl(188 100% 56% / 0.04));
-    --gradient-glass-hover: linear-gradient(135deg, hsl(210 60% 90% / 0.12), hsl(210 60% 90% / 0.03) 50%, hsl(188 100% 56% / 0.08));
+    /* Alluzion gradients & effects — minimal, deep, breathable */
+    --gradient-app: radial-gradient(ellipse at 8% -8%, hsl(220 80% 14% / 0.45), transparent 55%),
+                    radial-gradient(ellipse at 92% 8%, hsl(188 90% 30% / 0.20), transparent 50%),
+                    radial-gradient(ellipse at 50% 110%, hsl(230 70% 18% / 0.35), transparent 60%),
+                    linear-gradient(180deg, hsl(220 45% 4%), hsl(218 35% 8%));
+    --gradient-glass: linear-gradient(135deg, hsl(210 60% 90% / 0.045), hsl(210 60% 90% / 0.015) 50%, hsl(188 100% 56% / 0.025));
+    --gradient-glass-hover: linear-gradient(135deg, hsl(210 60% 90% / 0.075), hsl(210 60% 90% / 0.025) 50%, hsl(188 100% 56% / 0.05));
     --gradient-primary: linear-gradient(135deg, hsl(188 100% 60%), hsl(210 100% 60%));
-    --glass-blur: 18px;
-    --shadow-glass: 0 8px 32px -8px hsl(220 80% 4% / 0.6), 0 2px 8px hsl(220 80% 4% / 0.4);
-    --shadow-glow: 0 0 24px hsl(188 100% 56% / 0.18);
-    --highlight-top: inset 0 1px 0 hsl(210 60% 95% / 0.12);
+    --glass-blur: 12px;
+    --shadow-glass: 0 1px 0 hsl(0 0% 100% / 0.04) inset, 0 8px 32px -16px hsl(220 80% 2% / 0.5);
+    --shadow-glow: 0 0 0 1px hsl(188 100% 56% / 0.18), 0 0 24px -6px hsl(188 100% 56% / 0.20);
+    --highlight-top: inset 0 1px 0 hsl(210 60% 95% / 0.06);
   }
 
   .dark {
@@ -103,13 +103,13 @@
     font-family: 'JetBrains Mono', monospace;
   }
 
-  /* === Glass cards === */
+  /* === Glass cards (minimalist Alluzion) === */
   .v-card {
     position: relative;
     background: var(--gradient-glass);
-    backdrop-filter: blur(var(--glass-blur)) saturate(140%);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
-    border: 1px solid hsl(200 60% 70% / 0.12);
+    backdrop-filter: blur(var(--glass-blur)) saturate(135%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(135%);
+    border: 1px solid hsl(188 100% 70% / 0.06);
     border-radius: var(--radius);
     box-shadow: var(--shadow-glass), var(--highlight-top);
   }
@@ -125,12 +125,12 @@
   .v-card-interactive {
     position: relative;
     background: var(--gradient-glass);
-    backdrop-filter: blur(var(--glass-blur)) saturate(140%);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
-    border: 1px solid hsl(200 60% 70% / 0.12);
+    backdrop-filter: blur(var(--glass-blur)) saturate(135%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(135%);
+    border: 1px solid hsl(188 100% 70% / 0.06);
     border-radius: var(--radius);
     box-shadow: var(--shadow-glass), var(--highlight-top);
-    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, background 0.25s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
   }
   .v-card-interactive::before {
     content: "";
@@ -141,7 +141,7 @@
     pointer-events: none;
   }
   .v-card-interactive:hover {
-    border-color: hsl(188 100% 56% / 0.45);
+    border-color: hsl(188 100% 56% / 0.30);
     box-shadow: var(--shadow-glass), var(--shadow-glow), var(--highlight-top);
     background: var(--gradient-glass-hover);
   }
