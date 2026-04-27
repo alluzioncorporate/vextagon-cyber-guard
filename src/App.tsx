@@ -36,6 +36,7 @@ import Domo3Setup from "@/pages/Domo3Setup";
 import PasswordManager from "@/pages/PasswordManager";
 import NotFound from "@/pages/NotFound";
 import DomoScanner from "@/pages/DomoScanner";
+import ExecutiveDashboard from "@/pages/ExecutiveDashboard";
 
 
 const queryClient = new QueryClient();
@@ -66,7 +67,8 @@ const AppRoutes = () => (
   <Routes>
     <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
     <Route path="/reset-password" element={<ResetPassword />} />
-    <Route path="/" element={<ProtectedRoute><AppLayout><WafDashboard /></AppLayout></ProtectedRoute>} />
+    <Route path="/" element={<ProtectedRoute><AppLayout><ExecutiveDashboard /></AppLayout></ProtectedRoute>} />
+    <Route path="/waf" element={<ProtectedRoute><AppLayout><WafDashboard /></AppLayout></ProtectedRoute>} />
     <Route path="/domo" element={<ProtectedRoute><AppLayout><DomoScanner /></AppLayout></ProtectedRoute>} />
     <Route path="/easm" element={<ProtectedRoute><AppLayout><EasmScanner /></AppLayout></ProtectedRoute>} />
     <Route path="/data-leaks" element={<ProtectedRoute><AppLayout><DataLeaks /></AppLayout></ProtectedRoute>} />
