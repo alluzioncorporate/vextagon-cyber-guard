@@ -71,6 +71,42 @@ export type Database = {
         }
         Relationships: []
       }
+      broadcasts: {
+        Row: {
+          audience: string
+          created_at: string
+          id: string
+          message: string
+          recipients_count: number
+          send_email: boolean
+          sent_by: string
+          severity: string
+          title: string
+        }
+        Insert: {
+          audience?: string
+          created_at?: string
+          id?: string
+          message: string
+          recipients_count?: number
+          send_email?: boolean
+          sent_by: string
+          severity?: string
+          title: string
+        }
+        Update: {
+          audience?: string
+          created_at?: string
+          id?: string
+          message?: string
+          recipients_count?: number
+          send_email?: boolean
+          sent_by?: string
+          severity?: string
+          title?: string
+        }
+        Relationships: []
+      }
       honey_tokens: {
         Row: {
           access_count: number
@@ -142,6 +178,59 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      payments: {
+        Row: {
+          amount: number
+          asaas_payment_id: string | null
+          billing_type: string | null
+          created_at: string
+          due_date: string | null
+          id: string
+          invoice_url: string | null
+          paid_at: string | null
+          raw_payload: Json | null
+          status: string
+          subscription_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          asaas_payment_id?: string | null
+          billing_type?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          invoice_url?: string | null
+          paid_at?: string | null
+          raw_payload?: Json | null
+          status: string
+          subscription_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          asaas_payment_id?: string | null
+          billing_type?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          invoice_url?: string | null
+          paid_at?: string | null
+          raw_payload?: Json | null
+          status?: string
+          subscription_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       phishing_campaigns: {
         Row: {
@@ -376,6 +465,78 @@ export type Database = {
         }
         Relationships: []
       }
+      subscriptions: {
+        Row: {
+          asaas_customer_id: string | null
+          asaas_subscription_id: string | null
+          cancelled_at: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          started_at: string
+          status: Database["public"]["Enums"]["subscription_status"]
+          tier: Database["public"]["Enums"]["subscription_tier"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          asaas_customer_id?: string | null
+          asaas_subscription_id?: string | null
+          cancelled_at?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          started_at?: string
+          status?: Database["public"]["Enums"]["subscription_status"]
+          tier: Database["public"]["Enums"]["subscription_tier"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          asaas_customer_id?: string | null
+          asaas_subscription_id?: string | null
+          cancelled_at?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          started_at?: string
+          status?: Database["public"]["Enums"]["subscription_status"]
+          tier?: Database["public"]["Enums"]["subscription_tier"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      system_logs: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          metadata: Json | null
+          severity: string
+          source: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          metadata?: Json | null
+          severity?: string
+          source: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          metadata?: Json | null
+          severity?: string
+          source?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_domains: {
         Row: {
           added_at: string
@@ -459,6 +620,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      has_active_tier: {
+        Args: {
+          _tier: Database["public"]["Enums"]["subscription_tier"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -469,6 +637,13 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      subscription_status:
+        | "active"
+        | "pending"
+        | "expired"
+        | "cancelled"
+        | "overdue"
+      subscription_tier: "trial" | "domo_1" | "domo_2" | "domo_3"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -597,6 +772,14 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      subscription_status: [
+        "active",
+        "pending",
+        "expired",
+        "cancelled",
+        "overdue",
+      ],
+      subscription_tier: ["trial", "domo_1", "domo_2", "domo_3"],
     },
   },
 } as const
