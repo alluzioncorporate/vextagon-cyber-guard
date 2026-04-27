@@ -32,6 +32,7 @@ interface Module {
   title: string;
   duration: string;
   videoUrl?: string;
+  markdown?: string;
   quiz?: QuizQuestion[];
 }
 
