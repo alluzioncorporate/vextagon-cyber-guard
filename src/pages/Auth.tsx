@@ -61,6 +61,14 @@ export default function Auth() {
           },
         });
         if (error) throw error;
+        // Welcome email (best-effort, não bloqueia signup)
+        supabase.functions.invoke("send-email", {
+          body: {
+            to: email,
+            template: "welcome",
+            data: { name: fullName, appUrl: window.location.origin },
+          },
+        }).catch((e) => console.warn("welcome email skip", e));
         toast({ title: "Conta criada!", description: "Verifique seu e-mail para confirmar o cadastro." });
         setMode("login");
       }
