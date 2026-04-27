@@ -54,6 +54,7 @@ const shieldGroups = [
     icon: Shield,
     items: [
       { to: "/", icon: LayoutDashboard, label: "WAF & Defesa" },
+      { to: "/domo", icon: Sparkles, label: "O Domo (3 Níveis)" },
       { to: "/easm", icon: Radar, label: "EASM Scanner" },
       { to: "/subdomain-finder", icon: Search, label: "Subdomínios" },
       { to: "/cloud-leak-scanner", icon: Cloud, label: "Cloud Leaks" },
