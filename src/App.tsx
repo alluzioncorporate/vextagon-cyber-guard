@@ -18,6 +18,7 @@ import About from "@/pages/About";
 import Support from "@/pages/Support";
 import AdminPanel from "@/pages/AdminPanel";
 import AdminDiagnostics from "@/pages/AdminDiagnostics";
+import AdminMaster from "@/pages/AdminMaster";
 import SubdomainFinder from "@/pages/SubdomainFinder";
 import CloudLeakScanner from "@/pages/CloudLeakScanner";
 import TechStackProfiler from "@/pages/TechStackProfiler";
@@ -91,6 +92,7 @@ const AppRoutes = () => (
     <Route path="/pricing" element={<ProtectedRoute><AppLayout><Pricing /></AppLayout></ProtectedRoute>} />
     <Route path="/admin" element={<ProtectedRoute><AppLayout><AdminPanel /></AppLayout></ProtectedRoute>} />
     <Route path="/admin/diagnostics" element={<ProtectedRoute><AppLayout><AdminDiagnostics /></AppLayout></ProtectedRoute>} />
+    <Route path="/admin/master" element={<AdminRoute><AppLayout><AdminMaster /></AppLayout></AdminRoute>} />
     <Route path="/support" element={<ProtectedRoute><AppLayout><Support /></AppLayout></ProtectedRoute>} />
     <Route path="/about" element={<ProtectedRoute><AppLayout><About /></AppLayout></ProtectedRoute>} />
     <Route path="/academy" element={<ProtectedRoute><AppLayout><Academy /></AppLayout></ProtectedRoute>} />

@@ -38,6 +38,7 @@ import {
   ShieldCheck,
   Wrench,
   Sliders,
+  Crown,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -125,6 +126,7 @@ const academySystem = [
 
 // Páginas administrativas — somente para admins
 const adminItems = [
+  { to: "/admin/master", icon: Crown, label: "Master Admin" },
   { to: "/admin", icon: Sliders, label: "Painel Admin" },
   { to: "/admin/diagnostics", icon: ShieldCheck, label: "Diagnóstico" },
   { to: "/domo3-setup", icon: Wrench, label: "Setup Arsenal" },
