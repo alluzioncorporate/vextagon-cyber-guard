@@ -38,6 +38,7 @@ import {
   ShieldCheck,
   Wrench,
   Sliders,
+  Crown,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
