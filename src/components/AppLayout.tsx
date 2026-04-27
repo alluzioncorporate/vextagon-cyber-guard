@@ -125,6 +125,7 @@ const academySystem = [
 
 // Páginas administrativas — somente para admins
 const adminItems = [
+  { to: "/admin/master", icon: Crown, label: "Master Admin" },
   { to: "/admin", icon: Sliders, label: "Painel Admin" },
   { to: "/admin/diagnostics", icon: ShieldCheck, label: "Diagnóstico" },
   { to: "/domo3-setup", icon: Wrench, label: "Setup Arsenal" },
