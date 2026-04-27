@@ -26,12 +26,14 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { LessonViewer } from "@/components/LessonViewer";
 
 interface Module {
   id: string;
   title: string;
   duration: string;
   videoUrl?: string;
+  markdown?: string;
   quiz?: QuizQuestion[];
 }
 
@@ -65,7 +67,7 @@ const courses: Course[] = [
     level: "Iniciante",
     color: "text-cyan",
     modules: [
-      { id: "intro", title: "Introdução ao Bitwarden", duration: "15min", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+      { id: "intro", title: "Introdução ao Bitwarden", duration: "15min", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", markdown: `# Por que um gerenciador de senhas?\n\nReutilizar senhas é o **vetor #1** de comprometimento de contas. O Bitwarden resolve isso com:\n\n- Cofre criptografado **end-to-end** (AES-256 + PBKDF2)\n- Sincronização entre dispositivos\n- Geração de senhas fortes em 1 clique\n- **Open-source** e auditado\n\n## O que você vai aprender\n\n1. Criar uma conta segura com **master password** forte\n2. Importar senhas existentes do navegador\n3. Configurar **2FA** no próprio Bitwarden\n4. Boas práticas para equipes\n\n> 💡 **Dica:** sua master password nunca trafega nem é armazenada nos servidores. Se você esquecer, **não há recuperação** — escolha algo memorável e único.\n\n## Próximos passos\n\nAssista ao vídeo acima e siga para o módulo **Instalação e Configuração**.` },
       { id: "install", title: "Instalação e Configuração", duration: "20min", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
       { id: "vault", title: "Criando seu Cofre", duration: "25min" },
       { id: "passwords", title: "Gerando Senhas Fortes", duration: "20min", quiz: [
@@ -331,94 +333,79 @@ export default function Academy() {
 
       {/* Active Module Player */}
       {activeModule && currentModule && (
-        <Card className="border-primary/30 bg-primary/5">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm">{currentModule.title}</CardTitle>
-              <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => { setActiveModule(null); setQuizState({ answers: {}, submitted: false }); }}>
-                <X className="h-3 w-3 mr-1" /> Fechar
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Video */}
-            {currentModule.videoUrl && (
-              <div className="aspect-video rounded-lg overflow-hidden bg-secondary">
-                <iframe
-                  src={currentModule.videoUrl}
-                  className="w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
+        <LessonViewer
+          title={currentModule.title}
+          duration={currentModule.duration}
+          videoUrl={currentModule.videoUrl}
+          markdown={currentModule.markdown}
+          completed={!!getModuleProgress(activeModule.courseId, activeModule.moduleId)?.completed}
+          onClose={() => { setActiveModule(null); setQuizState({ answers: {}, submitted: false }); }}
+        >
+          {/* Quiz */}
+          {currentModule.quiz && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <HelpCircle className="h-4 w-4 text-primary" />
+                <span className="text-sm font-semibold">Quiz do Módulo</span>
               </div>
-            )}
-
-            {/* Quiz */}
-            {currentModule.quiz && (
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <HelpCircle className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-semibold">Quiz do Módulo</span>
+              {currentModule.quiz.map((q, qi) => (
+                <div key={qi} className="space-y-2 rounded-lg border border-white/5 bg-white/[0.03] p-3 backdrop-blur">
+                  <p className="text-sm font-medium">{q.question}</p>
+                  <div className="space-y-1">
+                    {q.options.map((opt, oi) => {
+                      const isSelected = quizState.answers[qi] === oi;
+                      const isCorrect = quizState.submitted && oi === q.correct;
+                      const isWrong = quizState.submitted && isSelected && oi !== q.correct;
+                      return (
+                        <button
+                          key={oi}
+                          disabled={quizState.submitted}
+                          onClick={() => setQuizState((prev) => ({ ...prev, answers: { ...prev.answers, [qi]: oi } }))}
+                          className={cn(
+                            "w-full text-left rounded-md px-3 py-2 text-xs transition-colors",
+                            isSelected && !quizState.submitted && "bg-primary/20 border border-primary/50",
+                            !isSelected && !quizState.submitted && "bg-white/5 hover:bg-white/10",
+                            isCorrect && "bg-emerald-500/20 border border-emerald-500/50 text-emerald-400",
+                            isWrong && "bg-red-500/20 border border-red-500/50 text-red-400"
+                          )}
+                        >
+                          {opt}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-                {currentModule.quiz.map((q, qi) => (
-                  <div key={qi} className="space-y-2 rounded-lg bg-secondary/50 p-3">
-                    <p className="text-sm font-medium">{q.question}</p>
-                    <div className="space-y-1">
-                      {q.options.map((opt, oi) => {
-                        const isSelected = quizState.answers[qi] === oi;
-                        const isCorrect = quizState.submitted && oi === q.correct;
-                        const isWrong = quizState.submitted && isSelected && oi !== q.correct;
-                        return (
-                          <button
-                            key={oi}
-                            disabled={quizState.submitted}
-                            onClick={() => setQuizState((prev) => ({ ...prev, answers: { ...prev.answers, [qi]: oi } }))}
-                            className={cn(
-                              "w-full text-left rounded-md px-3 py-2 text-xs transition-colors",
-                              isSelected && !quizState.submitted && "bg-primary/20 border border-primary/50",
-                              !isSelected && !quizState.submitted && "bg-muted hover:bg-muted/80",
-                              isCorrect && "bg-emerald-500/20 border border-emerald-500/50 text-emerald-400",
-                              isWrong && "bg-red-500/20 border border-red-500/50 text-red-400"
-                            )}
-                          >
-                            {opt}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))}
-                {!quizState.submitted ? (
-                  <Button
-                    size="sm"
-                    className="w-full"
-                    disabled={Object.keys(quizState.answers).length < currentModule.quiz.length}
-                    onClick={() => handleQuizSubmit(activeModule.courseId, activeModule.moduleId, currentModule.quiz!)}
-                  >
-                    Enviar Respostas
-                  </Button>
-                ) : (
-                  <div className="flex items-center justify-center gap-2 text-sm text-emerald-400">
-                    <CheckCircle2 className="h-4 w-4" />
-                    Quiz concluído!
-                  </div>
-                )}
-              </div>
-            )}
+              ))}
+              {!quizState.submitted ? (
+                <Button
+                  size="sm"
+                  className="w-full"
+                  disabled={Object.keys(quizState.answers).length < currentModule.quiz.length}
+                  onClick={() => handleQuizSubmit(activeModule.courseId, activeModule.moduleId, currentModule.quiz!)}
+                >
+                  Enviar Respostas
+                </Button>
+              ) : (
+                <div className="flex items-center justify-center gap-2 text-sm text-emerald-400">
+                  <CheckCircle2 className="h-4 w-4" />
+                  Quiz concluído!
+                </div>
+              )}
+            </div>
+          )}
 
-            {/* Complete without quiz */}
-            {!currentModule.quiz && !getModuleProgress(activeModule.courseId, activeModule.moduleId)?.completed && (
-              <Button
-                size="sm"
-                className="w-full"
-                onClick={() => markModuleComplete(activeModule.courseId, activeModule.moduleId)}
-              >
-                <Check className="mr-1 h-3 w-3" />
-                Marcar como Concluído
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+          {/* Complete without quiz */}
+          {!currentModule.quiz && !getModuleProgress(activeModule.courseId, activeModule.moduleId)?.completed && (
+            <Button
+              size="sm"
+              className="w-full"
+              onClick={() => markModuleComplete(activeModule.courseId, activeModule.moduleId)}
+            >
+              <Check className="mr-1 h-3 w-3" />
+              Marcar como Concluído
+            </Button>
+          )}
+        </LessonViewer>
       )}
 
       {/* Courses Grid */}
