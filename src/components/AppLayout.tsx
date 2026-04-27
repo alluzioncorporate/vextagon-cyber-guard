@@ -117,10 +117,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         key={item.to}
         to={item.to}
         className={cn(
-          "flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[12px] transition-colors duration-150",
+          "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-[12px] transition-all duration-150",
           isActive
-            ? `bg-primary/10 ${activeColorClass || "text-cyan"} border-l-2 border-l-primary`
-            : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+            ? `bg-white/[0.06] ${activeColorClass || "text-cyan"} border-l-2 border-l-primary shadow-[inset_0_1px_0_hsl(0_0%_100%/0.05)]`
+            : "text-muted-foreground hover:bg-white/[0.04] hover:text-foreground"
         )}
       >
         <item.icon className={cn("h-3.5 w-3.5 shrink-0", isActive && "text-primary")} />
@@ -130,18 +130,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen">
       <aside
         className={cn(
-          "fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-border bg-sidebar transition-all duration-200",
+          "fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-white/10 bg-sidebar/60 backdrop-blur-glass shadow-[inset_-1px_0_0_hsl(0_0%_100%/0.04)] transition-all duration-200",
           collapsed ? "w-14" : "w-56"
         )}
       >
         {/* Logo */}
-        <div className="flex h-14 items-center justify-between border-b border-border px-3">
+        <div className="flex h-14 items-center justify-between border-b border-white/10 px-3">
           {!collapsed && (
             <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-primary" />
+              <Shield className="h-5 w-5 text-primary drop-shadow-[0_0_8px_hsl(var(--primary)/0.7)]" />
               <span className="font-mono text-sm font-semibold tracking-widest text-foreground">
                 VEXTAGON
               </span>
@@ -210,7 +210,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-border px-3 py-3">
+        <div className="border-t border-white/10 px-3 py-3">
           {!collapsed ? (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
@@ -220,7 +220,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </div>
                 <button
                   onClick={signOut}
-                  className="rounded p-1.5 text-muted-foreground transition-colors hover:text-destructive hover:bg-destructive/10"
+                  className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-destructive hover:bg-destructive/10"
                   title="Sair"
                 >
                   <LogOut className="h-3.5 w-3.5" />
@@ -230,7 +230,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           ) : (
             <button
               onClick={signOut}
-              className="mx-auto flex rounded p-1.5 text-muted-foreground transition-colors hover:text-destructive"
+              className="mx-auto flex rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-destructive"
               title="Sair"
             >
               <LogOut className="h-3.5 w-3.5" />
@@ -240,7 +240,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </aside>
 
       <main className={cn("flex-1 transition-all duration-200", collapsed ? "ml-14" : "ml-56")}>
-        <div className="p-6 max-w-[1400px]">
+        <div className="p-6 max-w-[1400px] animate-fade-in">
           {children}
         </div>
       </main>
