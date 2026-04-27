@@ -227,7 +227,14 @@ export default function ServerMonitoring() {
       {/* Server Grid */}
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {[1, 2, 3].map((i) => <Card key={i} className="animate-pulse h-48" />)}
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="h-48 rounded-2xl border border-white/10 bg-gradient-glass backdrop-blur-glass shadow-glass overflow-hidden relative"
+            >
+              <div className="absolute inset-0 bg-[linear-gradient(110deg,transparent_30%,hsl(var(--primary)/0.08)_50%,transparent_70%)] bg-[length:200%_100%] animate-shine" />
+            </div>
+          ))}
         </div>
       ) : servers.length === 0 ? (
         <Card className="flex flex-col items-center justify-center py-16 text-center">

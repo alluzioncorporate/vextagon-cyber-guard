@@ -54,6 +54,7 @@ const shieldGroups = [
     icon: Shield,
     items: [
       { to: "/", icon: LayoutDashboard, label: "WAF & Defesa" },
+      { to: "/domo", icon: Sparkles, label: "O Domo (3 Níveis)" },
       { to: "/easm", icon: Radar, label: "EASM Scanner" },
       { to: "/subdomain-finder", icon: Search, label: "Subdomínios" },
       { to: "/cloud-leak-scanner", icon: Cloud, label: "Cloud Leaks" },
@@ -210,7 +211,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const PillarSwitcher = () => (
+  const pillarSwitcher = (
     <div
       className={cn(
         "mx-3 mt-3 mb-2 grid grid-cols-2 gap-1 rounded-xl border border-white/10 bg-white/[0.04] p-1 backdrop-blur-glass shadow-[inset_0_1px_0_hsl(0_0%_100%/0.06)]",
@@ -273,7 +274,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Pillar Switcher */}
-        <PillarSwitcher />
+        {pillarSwitcher}
         {!collapsed && (
           <p className="px-4 -mt-1 mb-1 text-[9px] uppercase tracking-[0.18em] text-muted-foreground/70">
             {pillar === "shield" ? "Painel de Ferramentas" : "Educação & Treinamento"}
