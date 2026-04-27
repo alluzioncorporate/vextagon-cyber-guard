@@ -66,7 +66,7 @@ const courses: Course[] = [
     level: "Iniciante",
     color: "text-cyan",
     modules: [
-      { id: "intro", title: "Introdução ao Bitwarden", duration: "15min", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+      { id: "intro", title: "Introdução ao Bitwarden", duration: "15min", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", markdown: `# Por que um gerenciador de senhas?\n\nReutilizar senhas é o **vetor #1** de comprometimento de contas. O Bitwarden resolve isso com:\n\n- Cofre criptografado **end-to-end** (AES-256 + PBKDF2)\n- Sincronização entre dispositivos\n- Geração de senhas fortes em 1 clique\n- **Open-source** e auditado\n\n## O que você vai aprender\n\n1. Criar uma conta segura com **master password** forte\n2. Importar senhas existentes do navegador\n3. Configurar **2FA** no próprio Bitwarden\n4. Boas práticas para equipes\n\n> 💡 **Dica:** sua master password nunca trafega nem é armazenada nos servidores. Se você esquecer, **não há recuperação** — escolha algo memorável e único.\n\n## Próximos passos\n\nAssista ao vídeo acima e siga para o módulo **Instalação e Configuração**.` },
       { id: "install", title: "Instalação e Configuração", duration: "20min", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
       { id: "vault", title: "Criando seu Cofre", duration: "25min" },
       { id: "passwords", title: "Gerando Senhas Fortes", duration: "20min", quiz: [
