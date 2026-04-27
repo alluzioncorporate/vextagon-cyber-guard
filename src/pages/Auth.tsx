@@ -85,13 +85,13 @@ export default function Auth() {
     mode === "login" ? "Acesse sua conta" : mode === "signup" ? "Crie sua conta" : "Recuperar senha";
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md border-border">
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <Card className="w-full max-w-md animate-fade-in">
         <CardHeader className="items-center text-center">
-          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
-            <Shield className="h-7 w-7 text-primary" />
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/30 to-accent/10 border border-white/10 shadow-[inset_0_1px_0_hsl(0_0%_100%/0.15),0_0_24px_hsl(var(--primary)/0.35)]">
+            <Shield className="h-8 w-8 text-primary drop-shadow-[0_0_10px_hsl(var(--primary)/0.8)]" />
           </div>
-          <CardTitle className="text-2xl text-foreground">VEXTAGON</CardTitle>
+          <CardTitle className="text-2xl tracking-widest text-foreground font-mono">VEXTAGON</CardTitle>
           <CardDescription>{title}</CardDescription>
         </CardHeader>
         <CardContent>
