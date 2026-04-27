@@ -100,7 +100,7 @@ const shieldSystem = [
   { to: "/about", icon: Info, label: "Sobre" },
 ];
 
-// Cerebralta Academy — foco em leitura e vídeo
+// Vextagon Academy — foco em leitura e vídeo
 const academyGroups = [
   {
     domo: "TRILHAS",
@@ -258,7 +258,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <Sparkles className="absolute -top-1 -right-1.5 h-2.5 w-2.5 text-accent/80" strokeWidth={2} />
               </div>
               <span className="font-mono text-sm font-semibold tracking-widest text-foreground">
-                {pillar === "shield" ? "VEXTAGON" : "CEREBRALTA"}
+                {pillar === "shield" ? "VEXTAGON" : "VEXTAGON ACADEMY"}
               </span>
             </div>
           )}
